@@ -1,0 +1,43 @@
+Colors from the Palette:
+#03122F (Dark Navy)
+#19305C (Blue)
+#413B61 (Dark Purple)
+#AE7DAC (Lavender)
+#F3DADF (Light Pink)
+#F1916D (Peach)
+Suggested Usage for UI Components:
+Backgrounds:
+
+Primary Background: Use #F3DADF (Light Pink) for a soft, clean look.
+Secondary Backgrounds: Use #AE7DAC (Lavender) for panels, cards, or secondary sections to provide subtle contrast.
+Buttons:
+
+Primary Buttons: Use #F1916D (Peach) to draw attention (e.g., Submit, Save).
+Secondary Buttons: Use #AE7DAC (Lavender) for less prominent actions.
+Disabled Buttons: Use #F3DADF (Light Pink) with reduced opacity to indicate inactivity.
+Text:
+
+Primary Text: Use #03122F (Dark Navy) for high contrast and readability on light backgrounds.
+Secondary Text: Use #19305C (Blue) for less prominent text (e.g., placeholders or captions).
+Borders and Dividers:
+
+Use #413B61 (Dark Purple) for subtle and elegant dividers or borders.
+Icons:
+
+Use #19305C (Blue) or #413B61 (Dark Purple) for a modern, neutral look that complements the rest of the theme.
+Navigation Bar:
+
+Use #19305C (Blue) or #03122F (Dark Navy) for a strong and clean navigation bar background. Pair it with #F3DADF (Light Pink) or white for icons and text.
+Alerts:
+
+Success: Use #F1916D (Peach) with white text for success alerts.
+Info: Use #19305C (Blue).
+Error: Use a deeper red tone derived from the palette (slightly darker than #F1916D).
+Hover States:
+
+For buttons and links, use a darker tone of their primary color on hover (e.g., darker shade of #F1916D for peach buttons).
+Example Layout:
+Header Bar: #03122F (Dark Navy) for the background with #F3DADF or white text/icons.
+Main Content Area: #F3DADF (Light Pink) as the primary background with components/cards in #AE7DAC.
+Call-to-Action Sections: Use #F1916D (Peach) for emphasis.
+

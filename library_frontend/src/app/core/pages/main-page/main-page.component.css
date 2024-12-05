@@ -1,0 +1,20 @@
+.lib-custom-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.lib-custom-header {
+
+}
+
+.lib-custom-main {
+  min-height: 80vh;
+  flex-grow: 1;
+  background-color: #FFFFFF;
+}
+
+.lib-custom-footer {
+
+}
+

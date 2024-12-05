@@ -1,0 +1,45 @@
+# Node.js (for TypeScript frontend)
+node_modules/
+dist/
+build/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# TypeScript build
+*.tsbuildinfo
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# JetBrains IDEs
+.idea/
+
+# VSCode
+.vscode/
+
+# Java (backend)
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+*.iml
+.idea/
+
+# Maven
+*.log
+mvnw
+mvnw.cmd

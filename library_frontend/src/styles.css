@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Helvetica';
+  url('assets/fonts/helvetica/Helvetica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  url('assets/fonts/Helvetica-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}/* You can add global styles to this file, and also import other style files */
+
+/*
+#03122F (Dark Navy): Navbar background or footer.
+#19305C (Deep Blue): Sidebar background or active tab indicator.
+#413B61 (Dark Purple): Buttons or section dividers.
+#AE7DAC (Soft Purple): Card headers or hover effects.
+#F3DADF (Pale Pink): Background of secondary sections or forms.
+#F1916D (Peach): Call-to-action buttons or key highlights.
+ */

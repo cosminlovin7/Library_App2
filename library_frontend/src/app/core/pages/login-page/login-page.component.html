@@ -1,0 +1,183 @@
+<div class="lib-custom-login-page">
+  <div
+    (click) = "setPageSectionActive('section-login');"
+    [ngClass]="{
+    'lib-custom-login-page-section': true,
+    'lib-custom-login-page-section-login': true,
+    'lib-custom-login-page-section-active': 'section-login' === _activeSectionId,
+    'lib-custom-login-page-section-disabled': 'section-login' !== _activeSectionId,
+  }"
+  >
+    <div class="lib-custom-login-page-section-form-login-container">
+      <div class="lib-custom-login-page-section-login-form-wrapper">
+        <div class="lib-custom-login-page-section-login-form-header">
+          Hello!
+        </div>
+        <div class="lib-custom-login-page-section-login-form-sub-header">
+          Welcome back to <b>Librario</b>!
+        </div>
+        <form
+          class="lib-custom-login-page-section-login-form"
+          [formGroup]="loginForm"
+          (ngSubmit)="handleLoginFormSubmit()"
+        >
+          <div class="lib-custom-login-page-section-login-form-group-wrapper">
+            <div class="lib-custom-login-page-section-login-form-group">
+              <input
+                class="lib-custom-login-page-section-login-form-input"
+                placeholder="Username"
+                id="login_username"
+                type="text"
+                formControlName="username"
+              >
+            </div>
+            <div *ngIf="loginForm.get('username')?.errors && loginForm.get('username')?.touched">
+              <small *ngIf="loginForm.get('username')?.errors?.['required']">Username is required.</small>
+              <small *ngIf="loginForm.get('username')?.errors?.['minlength']">Username must be at least 8 characters.</small>
+              <small *ngIf="loginForm.get('username')?.errors?.['specialCharacter']">Username cannot contain special characters.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-login-form-group-wrapper">
+            <div class="lib-custom-login-page-section-login-form-group">
+              <input
+                class="lib-custom-login-page-section-login-form-input"
+                placeholder="Password"
+                id="login_password"
+                type="password"
+                formControlName="password"
+              >
+            </div>
+            <div *ngIf="loginForm.get('password')?.errors && loginForm.get('password')?.touched">
+              <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+              <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-login-form-submit-button-wrapper">
+            <button
+              class="lib-custom-login-page-section-login-form-submit-button"
+              type="submit"
+              [disabled]="!loginForm.valid"
+            >
+              Log In
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    (click) = "setPageSectionActive('section-register');"
+    [ngClass]="{
+    'lib-custom-login-page-section': true,
+    'lib-custom-login-page-section-register': true,
+    'lib-custom-login-page-section-active': 'section-register' === _activeSectionId,
+    'lib-custom-login-page-section-disabled': 'section-register' !== _activeSectionId,
+  }"
+  >
+    <div class="lib-custom-login-page-section-form-register-container">
+      <div class="lib-custom-login-page-section-register-form-wrapper">
+        <div class="lib-custom-login-page-section-register-form-header">
+          No account?!
+        </div>
+        <div class="lib-custom-login-page-section-register-form-sub-header">
+          No problem! Let's create one...
+        </div>
+        <form
+          class="lib-custom-login-page-section-register-form"
+          [formGroup]="registerForm"
+          (ngSubmit)="handleRegisterFormSubmit()"
+        >
+          <div class="lib-custom-login-page-section-register-form-group-wrapper">
+            <div class="lib-custom-login-page-section-register-form-group">
+              <input
+                class="lib-custom-login-page-section-register-form-input"
+                placeholder="Username"
+                id="register_username"
+                type="text"
+                formControlName="username"
+              >
+            </div>
+            <div *ngIf="registerForm.get('username')?.errors && registerForm.get('username')?.touched">
+              <small *ngIf="registerForm.get('username')?.errors?.['required']">Username is required.</small>
+              <small *ngIf="registerForm.get('username')?.errors?.['minlength']">Username must be at least 8 characters.</small>
+              <small *ngIf="registerForm.get('username')?.errors?.['specialCharacter']">Username cannot contain special characters.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-register-form-group-wrapper">
+            <div class="lib-custom-login-page-section-register-form-group">
+              <input
+                class="lib-custom-login-page-section-register-form-input"
+                placeholder="Password"
+                id="register_password"
+                type="password"
+                formControlName="password"
+              >
+            </div>
+            <div *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched">
+              <small *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</small>
+              <small *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-register-form-group-wrapper">
+            <div class="lib-custom-login-page-section-register-form-group">
+              <input
+                class="lib-custom-login-page-section-register-form-input"
+                placeholder="Phone number"
+                id="register_phoneNumber"
+                type="text"
+                formControlName="phoneNumber"
+              >
+            </div>
+            <div *ngIf="registerForm.get('phoneNumber')?.errors && registerForm.get('phoneNumber')?.touched">
+              <small *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</small>
+              <small *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Phone number must have 8 digits.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-register-form-group-wrapper">
+            <div class="lib-custom-login-page-section-register-form-group">
+              <input
+                id="register_identityCardPhoto"
+                type="file"
+                style="display:none"
+                (change)="onFileChange($event)"
+              />
+              <div class="lib-custom-login-page-section-register-form-input-upload-wrapper">
+                <button
+                  class="lib-custom-login-page-section-register-form-input-upload"
+                  type="button"
+                  (click)="triggerFileInput()"
+                >
+                  Upload File
+                </button>
+                <div
+                  class="lib-custom-login-page-section-register-form-input-upload-message"
+                >
+                  <span *ngIf="null != _uploadedFileName">Selected File: {{ _uploadedFileName }}</span>
+                  <span *ngIf="null == _uploadedFileName">No file uploaded yet.</span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="registerForm.get('identityCardPhoto')?.errors && registerForm.get('identityCardPhoto')?.touched">
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['required']">Identity card photo is required.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-register-form-submit-button-wrapper">
+            <button
+              class="lib-custom-login-page-section-register-form-submit-button"
+              type="submit"
+              [disabled]="!registerForm.valid"
+            >
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

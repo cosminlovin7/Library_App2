@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  library_db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_DATABASE=library_db
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=library_user_db
+      - MYSQL_PASSWORD=library_user_pwd
+    volumes:
+      - library_db_vol:/var/lib/mysql
+    ports:
+      - "3307:3306"
+      
+volumes:
+  library_db_vol:
+      
