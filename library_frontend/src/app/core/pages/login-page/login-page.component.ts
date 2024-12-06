@@ -27,7 +27,7 @@ export class LoginPageComponent {
   registerForm = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), loginUsernameSpecialCharacterValidator()]),
     password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
-    phoneNumber: new FormControl('', [Validators.required, Validators.pattern('\\d{8}')]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern('\\d{10}')]),
     identityCardPhoto: new FormControl('', [Validators.required, registerIdentityCardPhotoValidator()])
   })
 

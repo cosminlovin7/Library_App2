@@ -245,7 +245,7 @@
   border-color: #413B61;
   transition: background 0.3s ease;
 
-  flex-grow: 1;
+  width: 30%;
 }
 
 .lib-custom-login-page-section-register-form-input-upload:hover {
@@ -255,11 +255,12 @@
 }
 
 .lib-custom-login-page-section-register-form-input-upload-message {
-  flex-grow: 1;
+  width: 70%;
 
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: center;
+  padding-left: 10px;
 }
 
 .lib-custom-login-page-section-register-form-submit-button-wrapper {

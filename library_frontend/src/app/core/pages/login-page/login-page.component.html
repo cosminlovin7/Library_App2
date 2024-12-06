@@ -162,8 +162,12 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="registerForm.get('identityCardPhoto')?.errors && registerForm.get('identityCardPhoto')?.touched">
-              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['required']">Identity card photo is required.</small>
+            <div *ngIf="registerForm.get('identityCardPhoto')?.errors">
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['required']">File is required.</small>
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['specialCharacter']">File name contains special characters.</small>
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['specialCharacter']">File name is invalid.</small>
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['sizeTooBig']">File is too big. Max. size: 5MB.</small>
+              <small *ngIf="registerForm.get('identityCardPhoto')?.errors?.['invalidFileType']">File has invalid type. Accepted: PNG/JPG/PDF.</small>
             </div>
           </div>
 
