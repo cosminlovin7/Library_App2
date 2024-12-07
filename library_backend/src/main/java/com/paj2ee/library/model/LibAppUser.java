@@ -10,12 +10,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.util.Set;
 
 @Entity
 @Table(
-	name = "libapp_users"
+	name = "libapp_users",
+	uniqueConstraints = {
+		@UniqueConstraint(
+			columnNames = {"username"}
+		)
+	}
 )
 public class LibAppUser {
 	@Id

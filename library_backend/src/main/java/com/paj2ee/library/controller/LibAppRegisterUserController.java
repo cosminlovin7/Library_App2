@@ -5,8 +5,11 @@ import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.model.LibAppUserAuthority;
 import com.paj2ee.library.repository.LibAppUserAuthorityRepository;
 import com.paj2ee.library.repository.LibAppUserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +22,10 @@ public class LibAppRegisterUserController {
 	@Autowired
 	private LibAppUserAuthorityRepository libAppUserAuthorityRepository;
 
+	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@RequestBody LibAppRegisterUserCmd cmd) {
+	public ResponseEntity<?> registerUser(@RequestBody @Valid LibAppRegisterUserCmd cmd) {
+
 		LibAppUser pendingLibAppUser = new LibAppUser();
 
 		pendingLibAppUser.setUsername(cmd.username());
@@ -37,6 +42,7 @@ public class LibAppRegisterUserController {
 		LibAppUserAuthority libAppUserAuthority = libAppUserAuthorityRepository.save(pendingLibAppUserAuthority);
 
 		return ResponseEntity.ok("User created successfully!");
+
 	}
 
 }

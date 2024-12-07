@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
   loginUsernameSpecialCharacterValidator,
   registerIdentityCardPhotoValidator
 } from '../../functions/validator-helper';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-login-page',
@@ -17,21 +18,21 @@ import {
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent {
-  _activeSectionId: string | null = 'section-register';
+  _activeSectionId: string | null = 'section-login';
   _uploadedFileName: string | null = null;
 
   loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), loginUsernameSpecialCharacterValidator()]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
+    username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30), loginUsernameSpecialCharacterValidator()]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
   });
   registerForm = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), loginUsernameSpecialCharacterValidator()]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
+    username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30), loginUsernameSpecialCharacterValidator()]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern('\\d{10}')]),
     identityCardPhoto: new FormControl('', [Validators.required, registerIdentityCardPhotoValidator()])
   })
 
-  constructor() {
+  constructor(private authService: AuthenticationService) {
 
   }
 
@@ -49,6 +50,8 @@ export class LoginPageComponent {
 
   handleLoginFormSubmit() {
     console.log(this.loginForm.value)
+
+    this.authService.login(this.loginForm.value);
   }
 
   handleRegisterFormSubmit() {

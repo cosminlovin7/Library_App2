@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private LibAppUserRepository libAppUserRepository;
 
+	//@NOTE: READ_COMMITTED: Prevents dirty reads by ensuring that a transaction can only read data that has been committed.
+	//@NOTE: REPEATABLE_READ: In addition to preventing dirty reads, ensures that if a row is read twice in the same
+	// transaction, the result will not change due to another transaction modifying or inserting data.
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		LibAppUser libAppUser = libAppUserRepository
@@ -29,7 +35,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 		Set<LibAppUserAuthority> authorities = libAppUser.getAuthorities();
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 		for (LibAppUserAuthority libAppUserAuthority : authorities) {
+
 			grantedAuthorities.add(new MyGrantedAuthority(libAppUserAuthority.getAuthority()));
+
 		}
 
 		UserDetails myUserDetails = User.withDefaultPasswordEncoder()

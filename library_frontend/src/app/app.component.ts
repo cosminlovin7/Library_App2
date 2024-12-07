@@ -1,14 +1,31 @@
-import { Component } from '@angular/core';
-import {MainPageComponent} from './core/pages/main-page/main-page.component';
-import {LoginPageComponent} from './core/pages/login-page/login-page.component';
+import {Component, effect, Injectable, OnInit, signal} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
+import {LoadingSpinnerComponent} from './shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, LoadingSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
+@Injectable({providedIn: 'root'})
 export class AppComponent {
-  //#todo
+
+  constructor(private http: HttpClient) {
+    effect(() => {
+      const spinner = document.getElementById('loading-spinner');
+      if (spinner) {
+        if (isLoading()) {
+          spinner.style.display = 'block'; // Show spinner
+        } else {
+          spinner.style.display = 'none'; // Hide spinner
+        }
+      }
+    });
+  }
+
 }
+
+export const isLoading = signal(false);

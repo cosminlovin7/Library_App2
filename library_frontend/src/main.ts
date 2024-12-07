@@ -5,4 +5,12 @@ import { AppComponent } from './app/app.component';
 console.log('the application starts here...');
 
 bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+  .then(() => {
+    const loader = document.getElementById('app-loading');
+    if (loader) {
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 500);
+    }
+  })
+  .catch(err => console.error(err));

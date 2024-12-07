@@ -12,16 +12,18 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
             .securityMatcher("/**")
             .authorizeHttpRequests((configurer) ->
                 configurer
                     .requestMatchers(
+                        "/login",
                         "/register"
                     ).permitAll()
                     .requestMatchers(
                         "/hello"
-                    ).hasRole("USER")
+                    ).permitAll()
                     .requestMatchers(
                         "/hello-admin"
                     ).hasRole("ADMIN")
@@ -32,10 +34,14 @@ public class WebSecurityConfig {
                 //noop
             })
             .csrf((configurer) ->
-                 configurer.ignoringRequestMatchers("/register")
+                configurer.ignoringRequestMatchers(
+                    "/register",
+                    "/login"
+                )
             )
         ;
 
         return http.build();
+
     }
 }
