@@ -1,8 +1,10 @@
 package com.paj2ee.library.cmd;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 public record LibAppRegisterUserCmd(
 	@NotNull(message = "Invalid username. Username cannot be null.")
@@ -34,6 +36,27 @@ public record LibAppRegisterUserCmd(
 		regexp = "^\\d{10}$",
 		message = "Invalid phone number. Phone number can contain only digits."
 	)
-	String phoneNumber
+	String phoneNumber,
+
+	@NotNull
+	@Pattern(
+		regexp = "^[^!@#$%^&*(),?\":{}|<>]+$",
+		message = "Invalid file name. File name cannot contain special characters."
+	)
+	String fileName,
+
+	@NotNull
+	@Max(5 * 1024 * 1024)
+	Long fileSize,
+
+	@NotNull
+	@Pattern(
+		regexp = "^[^!@#$%^&*(),.?\":{}|<>]+$",
+		message = "Invalid file type. File type cannot contain special characters."
+	)
+	String fileType,
+
+	@NotNull(message = "Invalid file. File cannot be null.")
+	String fileData
 ) {
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -29,16 +30,16 @@ public class LibAppUser {
 	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 
-	@Column(name = "username", nullable=false, updatable=false)
+	@Column(name = "username", nullable = false, updatable = false)
 	private String username;
 
-	@Column(name = "password", nullable=false, updatable=true)
+	@Column(name = "password", nullable = false, updatable = true)
 	private String password;
 
-	@Column(name = "phone_number", nullable=false, updatable=true)
+	@Column(name = "phone_number", nullable = false, updatable = true)
 	private String phoneNumber;
 
-	@Column(name = "enabled", nullable=false, updatable=true)
+	@Column(name = "enabled", nullable = false, updatable = true)
 	private boolean enabled;
 
 	@OneToMany(
@@ -48,9 +49,10 @@ public class LibAppUser {
 	)
 	private Set<LibAppUserAuthority> authorities;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@OneToOne(
+		optional = true
+	)
+	private LibAppFile identityCardFile;
 
 	public Long getId() {
 		return id;
@@ -90,6 +92,14 @@ public class LibAppUser {
 
 	public Set<LibAppUserAuthority> getAuthorities() {
 		return authorities;
+	}
+
+	public LibAppFile getIdentityCardFile() {
+		return identityCardFile;
+	}
+
+	public void setIdentityCardFile(LibAppFile identityCardFile) {
+		this.identityCardFile = identityCardFile;
 	}
 
 	@Override

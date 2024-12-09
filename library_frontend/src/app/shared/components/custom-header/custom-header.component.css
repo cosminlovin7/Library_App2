@@ -1,5 +1,81 @@
 .lib-custom-header {
   width: 100%;
-  height: 75px;
+  height: 40px;
   background-color: #03122F;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  /*justify-content: center;*/
+}
+
+
+.lib-custom-header-welcome-message-wrapper {
+  flex: 1;
+  min-width: 400px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.lib-custom-header-welcome-message {
+
+  padding: 20px;
+
+}
+
+.lib-custom-header-welcome-message-user {
+
+  font-weight: bold;
+  font-style: italic
+
+}
+
+.lib-custom-header-info-container-wrapper {
+  flex: 1;
+  min-width: 400px;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lib-custom-header-info-container {
+}
+
+.lib-custom-header-info-message {
+  color: yellow;
+}
+
+.lib-custom-header-navbar-wrapper {
+  flex: 1;
+  min-width: 400px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  font-weight: bold;
+}
+
+.lib-custom-header-navbar td {
+  padding: 10px;
+}
+
+.lib-custom-header-navbar-button {
+
+}
+
+.lib-custom-header-navbar-button:hover {
+  cursor: pointer;
+  color: #F1916D;
+}
+
+.lib-custom-header-navbar-button-text:hover {
+  cursor: pointer;
+  color: #F1916D;
+
+  text-decoration: underline;
 }

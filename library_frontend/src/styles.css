@@ -16,6 +16,8 @@ body {
   position: relative;
   margin: 0;
   font-family: 'Helvetica', 'Arial', sans-serif;
+
+  min-width: 1200px;
 }/* You can add global styles to this file, and also import other style files */
 
 #app-loading {

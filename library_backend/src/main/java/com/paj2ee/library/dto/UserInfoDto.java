@@ -5,6 +5,7 @@ import java.util.List;
 public record UserInfoDto (
 	String username,
 	boolean enabled,
-	List<String> authorities
+	List<String> authorities,
+	FileInfoDto identityPhotoFile
 ) {
 }

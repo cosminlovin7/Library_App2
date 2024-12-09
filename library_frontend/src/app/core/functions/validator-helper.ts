@@ -35,20 +35,12 @@ export function registerIdentityCardPhotoValidator(): ValidatorFn {
       let out = null;
 
       try {
-        let splittedName = value.name.split('.');
-
-        if (splittedName.length > 1) {
-          out = '';
-          //@NOTE: Skip the last index, it should be the extension...
-          for (var i = 0; i < splittedName.length - 1; i++) {
-            out = out + splittedName[i];
-          }
-        } else if (splittedName.length === 1) {
-          out = splittedName[0];
+        let dotIndex = value.name.lastIndexOf(".");
+        if (dotIndex == -1) {
+          // No extension found
         } else {
-          //noop
+          out = value.name.substring(0, dotIndex);
         }
-
       } catch (e) {
         console.warn('Cannot parse filename');
       }

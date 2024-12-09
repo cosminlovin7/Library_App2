@@ -1,14 +1,17 @@
 package com.paj2ee.library.controller;
 
 import com.paj2ee.library.cmd.LibAppLoginUserCmd;
+import com.paj2ee.library.dto.FileInfoDto;
+import com.paj2ee.library.dto.FileInfoMetaDto;
 import com.paj2ee.library.dto.UserInfoDto;
+import com.paj2ee.library.model.LibAppFile;
 import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.model.LibAppUserAuthority;
 import com.paj2ee.library.repository.LibAppUserRepository;
+import com.paj2ee.library.service.DiskStorageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,8 @@ public class LibAppLoginUserController {
 
 	@Autowired
 	private LibAppUserRepository libAppUserRepository;
+	@Autowired
+	private DiskStorageService diskStorageServiceImpl;
 
 	@PostMapping("/login")
 	public ResponseEntity<UserInfoDto> loginUser(@RequestBody @Valid LibAppLoginUserCmd libAppLoginUserCmd) {
@@ -37,10 +42,32 @@ public class LibAppLoginUserController {
 			authoritiesAsString.add(libAppUserAuthority.getAuthority());
 		}
 
+		LibAppFile libAppFile = libAppUser.getIdentityCardFile();
+
+		String base64IdentityPhotoFile = null;
+
+		FileInfoDto fileInfoDto = null;
+		if (null != libAppFile) {
+			base64IdentityPhotoFile = diskStorageServiceImpl.getFileAsBase64(libAppFile.getFilename());
+
+			FileInfoMetaDto fileInfoMetaDto = new FileInfoMetaDto(
+				libAppFile.getFilename(),
+				libAppFile.getType(),
+				libAppFile.getSize()
+			);
+
+			fileInfoDto = new FileInfoDto(
+				fileInfoMetaDto,
+				base64IdentityPhotoFile
+			);
+		}
+
+
 		UserInfoDto userInfoDto = new UserInfoDto(
 			libAppUser.getUsername(),
 			libAppUser.isEnabled(),
-			authoritiesAsString
+			authoritiesAsString,
+			fileInfoDto
 		);
 
 		return ResponseEntity.ok(userInfoDto);

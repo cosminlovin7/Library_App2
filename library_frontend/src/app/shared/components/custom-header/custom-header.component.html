@@ -1,2 +1,56 @@
 <div class="lib-custom-header">
+  <div class="lib-custom-header-welcome-message-wrapper">
+    <div class="lib-custom-header-welcome-message">
+      Librario |
+      @if (false === authenticationService.isAuthenticated()) {
+        Welcome!
+      }
+      @else {
+        Welcome, <span class="lib-custom-header-welcome-message-user">{{authenticationService.getUsername()}}</span>!
+      }
+    </div>
+  </div>
+  <div class="lib-custom-header-info-container-wrapper">
+    <div class="lib-custom-header-info-container">
+      @if (false === authenticationService.isEnabled()) {
+        <span class="lib-custom-header-info-message">Your account is not enabled yet!</span>
+      }
+    </div>
+  </div>
+  <div class="lib-custom-header-navbar-wrapper">
+    <table class="lib-custom-header-navbar">
+      <tr>
+        <td (click)="handleExploreClick()" class="lib-custom-header-navbar-button-text">
+          Explore
+        </td>
+
+        @if (false === authenticationService.hasRoleAdmin()) {
+
+        }
+        @else {
+          <td (click)="handleAllUsersClick()" class ="lib-custom-header-navbar-button-text">
+            All Users
+          </td>
+        }
+
+        @if (false === authenticationService.hasRoleAdmin()) {
+
+        }
+        @else {
+          <td (click)="handleInventoryClick()" class="lib-custom-header-navbar-button-text">
+            Inventory
+          </td>
+        }
+
+        @if (false === authenticationService.isAuthenticated()) {
+          <td>Login</td>
+        }
+        @else {
+          <td (click)="handleLogoutClick()" class="lib-custom-header-navbar-button-text">
+            Logout
+          </td>
+        }
+      </tr>
+    </table>
+  </div>
 </div>
