@@ -11,6 +11,7 @@ import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/h
 import {basicAuthInterceptor} from './core/helpers/basic-auth.interceptor';
 import {Observable} from 'rxjs';
 import {UserInfoDto} from './core/models/user-info-dto';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 const initializerFn = (): Observable<unknown> | Promise<unknown> | void => {
   const http = inject(HttpClient);
@@ -36,6 +37,12 @@ const initializerFn = (): Observable<unknown> | Promise<unknown> | void => {
         }
 
         if (null != userInfoDto && null != value) {
+          if (userInfoDto.id === value.id) {
+            //noop, all good
+          } else {
+            userInfoOk = false;
+          }
+
           if (userInfoDto.username === value.username) {
             //noop, all good
           } else {
@@ -109,6 +116,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([basicAuthInterceptor]),
     ),
     //@NOTE: https://angular.dev/api/core/provideAppInitializer
-    provideAppInitializer(initializerFn)
+    provideAppInitializer(initializerFn), provideAnimationsAsync()
   ]
 };

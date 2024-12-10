@@ -1,0 +1,145 @@
+fieldset {
+  box-sizing: border-box;
+
+  margin: 0;
+
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+legend {
+  font-weight: bold;
+}
+
+th {
+  background-color: #03122F; /* Light background for headers */
+  font-weight: bold; /* Make header text bold */
+  color: white;
+}
+
+tr:nth-child(odd) {
+  background-color: #FFFFFF;  /* Light gray for odd rows */
+}
+
+/* Apply background color to even rows */
+tr:nth-child(even) {
+  background-color: #F3DADF;  /* Slightly darker gray for even rows */
+}
+
+.lib-all-users-page-container {
+  flex: 1;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+.lib-all-users-page-filter-wrapper {
+  width: 100%;
+}
+
+.lib-all-uses-page-filter-options-wrapper {
+  padding: 10px;
+}
+
+.lib-all-uses-page-filter-options-container {
+  display: flex;
+}
+
+.lib-all-users-page-options-fieldset {
+  /*width: 100%;*/
+}
+
+.lib-all-users-page-table-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px;
+}
+
+.lib-all-users-page-table {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+.lib-all-users-page-table th, td {
+  border: 1px solid lightgray; /* Borders for rows and columns */
+  padding: 8px;
+}
+
+.lib-all-users-page-table-head-row {
+  /*display: flex;*/
+}
+
+.lib-all-users-page-table-th-ID {
+  width: 50px;
+}
+
+.lib-all-users-page-table-th-username {
+  width: 250px;
+}
+
+.lib-all-users-page-table-th-enabled {
+  width: 50px;
+}
+
+.lib-all-users-page-table-th-id-photo {
+  width: 200px;
+}
+
+.lib-all-users-page-table-th-authorities {
+  width: 300px;
+}
+
+.lib-all-users-page-table-th-actions {
+  width: 300px;
+}
+
+.lib-all-users-page-table-th-empty {
+}
+
+.lib-all-users-page-table-td-ID {
+  width: 50px;
+}
+
+.lib-all-users-page-table-td-username {
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lib-all-users-page-table-td-enabled {
+  width: 50px;
+}
+
+.lib-all-users-page-table-td-id-photo {
+  width: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lib-all-users-page-table-td-authorities {
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lib-all-users-page-table-td-actions {
+  width: 300px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lib-all-users-page-table-td-empty {
+
+}

@@ -1,1 +1,94 @@
-<p>all-users-page works!</p>
+<div *ngIf="loading; else content">
+  <p>Loading...</p>
+</div>
+
+<ng-template #content>
+  <div class="lib-all-users-page-container">
+    <div class="lib-all-users-page-filter-wrapper">
+      <div class="lib-all-uses-page-filter-options-wrapper">
+        <fieldset class="lib-all-users-page-options-fieldset">
+          <legend>Options:</legend>
+          <div class="lib-all-uses-page-filter-options-container">
+            <fieldset class="lib-all-users-page-user-status-fieldset">
+              <legend>User status:</legend>
+              <div>
+                <input id="filterUserStatusEnabled" type="checkbox" [(ngModel)]="isFilterActiveEnabled" (input)="handleOnChangeFilterUserStatusEnabledCheckbox($event)" />
+                <label for="filterUserStatusEnabled">Enabled</label>
+              </div>
+              <div>
+                <input id="filterUserStatusDisabled" type="checkbox" [(ngModel)]="isFilterActiveDisabled" (input)="handleOnChangeFilterUserStatusDisabledCheckbox($event)" />
+                <label for="filterUserStatusDisabled">Disabled</label>
+              </div>
+              <div>
+                <input id="filterUserStatusAny" type="checkbox" [(ngModel)]="isFilterActiveAny" (input)="handleOnChangeFilterUserStatusAnyCheckbox($event)" />
+                <label for="filterUserStatusAny">Any</label>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="lib-all-users-page-table-wrapper">
+      <table class="lib-all-users-page-table">
+        <thead>
+          <tr class="lib-all-users-page-table-head-row">
+            <th class="lib-all-users-page-table-th-ID">ID</th>
+            <th class="lib-all-users-page-table-th-username">Username</th>
+            <th class="lib-all-users-page-table-th-enabled">Enabled</th>
+            <th class="lib-all-users-page-table-th-id-photo">Identity Photo File</th>
+            <th class="lib-all-users-page-table-th-authorities">Authorities</th>
+            <th class="lib-all-users-page-table-th-actions">Actions</th>
+            <th class="lib-all-users-page-table-th-empty"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>
+              <div class="lib-all-users-page-table-td-ID">
+                {{ user.id }}
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-username">
+                {{ user.username }}
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-enabled">
+                {{ user.enabled }}
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-id-photo">
+                @if (null != user.identityPhotoFile) {
+                  <button (click)="handleDownloadUserIdentityPhotoFile(user.id)">Download</button>
+                }
+                @else {
+                  -
+                }
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-authorities">
+                {{ user.authorities }}
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-actions">
+                @if (false === user.enabled) {
+                  <button (click)="enableUser(user.id)">Enable</button>
+                }
+                @else {
+              }
+              </div>
+            </td>
+            <td>
+              <div class="lib-all-users-page-table-td-empty">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

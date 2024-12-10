@@ -8,7 +8,6 @@ import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.model.LibAppUserAuthority;
 import com.paj2ee.library.repository.LibAppUserRepository;
 import com.paj2ee.library.service.DiskStorageService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +29,24 @@ public class LibAppUserController {
 
 	@GetMapping("/users")
 	public ResponseEntity<List<UserInfoDto>> getAllUsers(
-		@RequestParam(name = "enabled", required = false, defaultValue = "false") boolean enabled
+		@RequestParam(name = "userStatus", required = false, defaultValue = "any") String userStatus
 	) {
 		Specification<LibAppUser> allSpec =
 			rootSpec();
 
-		if (true == enabled) {
-			allSpec = allSpec.and(isUserEnabled());
+		switch (userStatus) {
+			case "enabled" -> {
+				allSpec = allSpec.and(isUserEnabled());
+			}
+			case "disabled" -> {
+				allSpec = allSpec.and(Specification.not(isUserEnabled()));
+			}
+			case "any" -> {
+				//noop
+			}
+			default -> {
+				throw new RuntimeException("Invalid userStatus param");
+			}
 		}
 
 		List<LibAppUser> users = libAppUserRepository.findAll(allSpec);
@@ -66,12 +76,14 @@ public class LibAppUserController {
 				);
 
 				fileInfoDto = new FileInfoDto(
+					libAppFile.getId(),
 					fileInfoMetaDto,
 					base64IdentityPhotoFile
 				);
 			}
 
 			UserInfoDto userInfoDto = new UserInfoDto(
+				user.getId(),
 				user.getUsername(),
 				user.isEnabled(),
 				authorities,

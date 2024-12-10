@@ -57,6 +57,7 @@ public class LibAppLoginUserController {
 			);
 
 			fileInfoDto = new FileInfoDto(
+				libAppFile.getId(),
 				fileInfoMetaDto,
 				base64IdentityPhotoFile
 			);
@@ -64,6 +65,7 @@ public class LibAppLoginUserController {
 
 
 		UserInfoDto userInfoDto = new UserInfoDto(
+			libAppUser.getId(),
 			libAppUser.getUsername(),
 			libAppUser.isEnabled(),
 			authoritiesAsString,

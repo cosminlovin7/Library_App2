@@ -9,12 +9,17 @@
 }
 
 .lib-custom-main {
-  min-height: 80vh;
-  flex-grow: 1;
+  /*min-height: 80vh;*/
+  /*flex-grow: 1;*/
+  flex: 1 1 auto;
+
   background-color: #FFFFFF;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column; /* Stacks the children vertically */
 }
 
 .lib-custom-footer {
 
 }
-

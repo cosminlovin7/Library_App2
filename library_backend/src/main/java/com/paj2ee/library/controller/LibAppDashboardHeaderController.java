@@ -78,12 +78,14 @@ public class LibAppDashboardHeaderController {
 						);
 
 						fileInfoDto = new FileInfoDto(
+							libAppFile.getId(),
 							fileInfoMetaDto,
 							base64IdentityPhotoFile
 						);
 					}
 
 					out = new UserInfoDto(
+						libAppUser.getId(),
 						libAppUser.getUsername(),
 						libAppUser.isEnabled(),
 						authorities,
