@@ -27,33 +27,6 @@ public class LibAppAdminBookCollectionController {
 	@Autowired
 	private LibAppBookCollectionRepository libAppBookCollectionRepository;
 
-	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-	@GetMapping("/admin/book-collections/{id}")
-	public ResponseEntity<BookCollectionDto> getCollection(@PathVariable("id") long id) {
-
-		LibAppBookCollection libAppBookCollection = libAppBookCollectionRepository
-			.findById(id)
-			.orElseThrow(() -> new RuntimeException("Book collection not found"));
-
-		BookCollectionDto out = BookCollectionDto.fromEntity(libAppBookCollection);
-
-		return ResponseEntity.ok(out);
-	}
-
-	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-	@GetMapping("/admin/book-collections")
-	public ResponseEntity<List<BookCollectionDto>> getCollections() {
-
-		List<LibAppBookCollection> bookCollectionLs = libAppBookCollectionRepository.findAll();
-
-		List<BookCollectionDto> outLs = new ArrayList<>();
-		for (LibAppBookCollection bookCollection : bookCollectionLs) {
-			outLs.add(BookCollectionDto.fromEntity(bookCollection));
-		}
-
-		return ResponseEntity.ok(outLs);
-	}
-
 	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
 	@PostMapping("/admin/book-collections/create-collection")
 	public ResponseEntity<BookCollectionDto> createCollection(@Valid @RequestBody LibAppBookCollectionCmd cmd) {

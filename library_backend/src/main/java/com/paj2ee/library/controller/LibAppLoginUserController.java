@@ -70,6 +70,7 @@ public class LibAppLoginUserController {
 		UserInfoDto userInfoDto = new UserInfoDto(
 			libAppUser.getId(),
 			libAppUser.getUsername(),
+			libAppUser.getEmail(),
 			libAppUser.isEnabled(),
 			authoritiesAsString,
 			fileInfoDto

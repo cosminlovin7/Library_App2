@@ -87,6 +87,7 @@ public class LibAppDashboardHeaderController {
 					out = new UserInfoDto(
 						libAppUser.getId(),
 						libAppUser.getUsername(),
+						libAppUser.getEmail(),
 						libAppUser.isEnabled(),
 						authorities,
 						fileInfoDto

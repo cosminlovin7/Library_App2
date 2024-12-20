@@ -88,6 +88,7 @@ public class LibAppUserController {
 			UserInfoDto userInfoDto = new UserInfoDto(
 				user.getId(),
 				user.getUsername(),
+				user.getEmail(),
 				user.isEnabled(),
 				authorities,
 				fileInfoDto

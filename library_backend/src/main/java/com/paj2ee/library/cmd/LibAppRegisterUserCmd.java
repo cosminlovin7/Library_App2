@@ -11,7 +11,7 @@ public record LibAppRegisterUserCmd(
 	@Length(
 		min = 8,
 		max = 30,
-		message = "Invalid password. Must have min. 8 and max. 30 characters."
+		message = "Invalid username. Must have min. 8 and max. 30 characters."
 	)
 	@Pattern(
 		regexp = "^[^!@#$%^&*(),.?\":{}|<>]+$",
@@ -26,6 +26,18 @@ public record LibAppRegisterUserCmd(
 		message = "Invalid password. Must have min. 8 and max. 30 characters."
 	)
 	String password,
+
+	@NotNull(message = "Invalid email. Email cannot be null.")
+	@Length(
+		min = 8,
+		max = 30,
+		message = "Invalid email. Must have min. 8 and max. 30 characters."
+	)
+	@Pattern(
+		regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+		message = "Invalid email. Email has wrong format."
+	)
+	String email,
 
 	@NotNull(message = "Invalid phone number. Phone number cannot be null.")
 	@Length(

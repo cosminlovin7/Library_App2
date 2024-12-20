@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Table(
-	name = "libapp_book_collection",
+	name = "libapp_book_collections",
 	uniqueConstraints = {
 		@UniqueConstraint(
 			columnNames = {"name"}

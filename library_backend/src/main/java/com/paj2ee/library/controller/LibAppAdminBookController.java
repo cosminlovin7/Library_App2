@@ -1,10 +1,10 @@
 package com.paj2ee.library.controller;
 
 import com.paj2ee.library.cmd.LibAppCreateBookCmd;
+import com.paj2ee.library.cmd.LibAppUpdateBookCmd;
 import com.paj2ee.library.dto.BookDto;
 import com.paj2ee.library.model.LibAppBook;
 import com.paj2ee.library.model.LibAppBookCollection;
-import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.repository.LibAppBookCollectionRepository;
 import com.paj2ee.library.repository.LibAppBookRepository;
 import jakarta.validation.Valid;
@@ -57,7 +57,7 @@ public class LibAppAdminBookController {
 	@PutMapping("/admin/books/update-book/{id}")
 	public ResponseEntity<BookDto> updateBook(
 		@PathVariable("id") long id,
-		@Valid @RequestBody LibAppCreateBookCmd cmd
+		@Valid @RequestBody LibAppUpdateBookCmd cmd
 	) {
 
 		LibAppBook libAppBookToUpdate = libAppBookRepository
@@ -109,6 +109,10 @@ public class LibAppAdminBookController {
 		LibAppBookCollection libAppBookCollection = libAppBookCollectionRepository
 			.findById(bookCollectionId)
 			.orElseThrow(() -> new RuntimeException("Book collection not found"));
+
+		if (null != libAppBookToAdd.getCollection()) {
+			throw new RuntimeException("Book is already part of a collection");
+		}
 
 		libAppBookToAdd.setCollection(libAppBookCollection);
 

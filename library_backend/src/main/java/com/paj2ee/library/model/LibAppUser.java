@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -36,6 +37,9 @@ public class LibAppUser {
 	@Column(name = "password", nullable = false, updatable = true)
 	private String password;
 
+	@Column(name = "email", nullable = false, updatable = true)
+	private String email;
+
 	@Column(name = "phone_number", nullable = false, updatable = true)
 	private String phoneNumber;
 
@@ -48,6 +52,13 @@ public class LibAppUser {
 		fetch = FetchType.EAGER
 	)
 	private Set<LibAppUserAuthority> authorities;
+
+	@OneToMany(
+		mappedBy = "ownerUser",
+		cascade = CascadeType.ALL,
+		fetch = FetchType.LAZY
+	)
+	private Set<LibAppBookLoan> bookLoans;
 
 	@OneToOne(
 		optional = true
@@ -72,6 +83,14 @@ public class LibAppUser {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPhoneNumber() {
@@ -100,6 +119,14 @@ public class LibAppUser {
 
 	public void setIdentityCardFile(LibAppFile identityCardFile) {
 		this.identityCardFile = identityCardFile;
+	}
+
+	public Set<LibAppBookLoan> getBookLoans() {
+		return bookLoans;
+	}
+
+	public void setBookLoans(Set<LibAppBookLoan> bookLoans) {
+		this.bookLoans = bookLoans;
 	}
 
 	@Override

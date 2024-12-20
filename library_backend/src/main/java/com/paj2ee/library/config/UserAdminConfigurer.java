@@ -24,6 +24,8 @@ public class UserAdminConfigurer {
 	private String ADMIN_USERNAME;
 	@Value("${libapp.admin.password:#{null}}")
 	private String ADMIN_PASSWORD;
+	@Value("${libapp.admin.email:#{null}}")
+	private String ADMIN_EMAIL;
 	@Value("${libapp.admin.phone-number:#{null}}")
 	private String ADMIN_PHONE_NUMBER;
 	@Value("${libapp.admin.authorities:#{null}}")
@@ -52,12 +54,14 @@ public class UserAdminConfigurer {
 
 			boolean hasUsernameDefined 		= (null != ADMIN_USERNAME);
 			boolean hasPasswordDefined 		= (null != ADMIN_PASSWORD);
+			boolean hasEmailDefined 		= (null != ADMIN_EMAIL);
 			boolean hasPhoneNumberDefined 	= (null != ADMIN_PHONE_NUMBER);
 			boolean hasAuthoritiesDefined 	= (null != ADMIN_AUTHORITIES);
 
 			boolean hasAllPropertiesDefined = (
 				hasUsernameDefined
 				&& hasPasswordDefined
+				&& hasEmailDefined
 				&& hasPhoneNumberDefined
 				&& hasAuthoritiesDefined
 			);
@@ -67,6 +71,7 @@ public class UserAdminConfigurer {
 				LibAppUser pendingAdminUser = new LibAppUser();
 				pendingAdminUser.setUsername(ADMIN_USERNAME);
 				pendingAdminUser.setPassword(ADMIN_PASSWORD);
+				pendingAdminUser.setEmail(ADMIN_EMAIL);
 				pendingAdminUser.setPhoneNumber(ADMIN_PHONE_NUMBER);
 				pendingAdminUser.setEnabled(true);
 
@@ -94,6 +99,11 @@ public class UserAdminConfigurer {
 				if (! hasPasswordDefined) {
 
 					errorList.add("password property is not defined");
+
+				}
+				if (! hasEmailDefined) {
+
+					errorList.add("email property is not defined");
 
 				}
 				if (! hasPhoneNumberDefined) {

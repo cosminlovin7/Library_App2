@@ -5,6 +5,7 @@ import java.util.List;
 public record UserInfoDto (
 	Long id,
 	String username,
+	String email,
 	boolean enabled,
 	List<String> authorities,
 	FileInfoDto identityPhotoFile

@@ -1,13 +1,16 @@
 package com.paj2ee.library.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -59,6 +62,15 @@ public class LibAppBook {
 
 	@Column(name = "year_of_publication", nullable = false, updatable = true)
 	private int yearOfPublication;
+
+	@OneToOne(
+		mappedBy = "ownerLibAppBook",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true,
+		optional = true,
+		fetch = FetchType.EAGER
+	)
+	private LibAppBookWrapper libAppBookWrapper;
 
 	public Long getId() {
 		return id;
@@ -150,6 +162,14 @@ public class LibAppBook {
 
 	public void setYearOfPublication(int yearOfPublication) {
 		this.yearOfPublication = yearOfPublication;
+	}
+
+	public LibAppBookWrapper getLibAppBookWrapper() {
+		return libAppBookWrapper;
+	}
+
+	public void setLibAppBookWrapper(LibAppBookWrapper libAppBookWrapper) {
+		this.libAppBookWrapper = libAppBookWrapper;
 	}
 
 	public enum BookCoverType {

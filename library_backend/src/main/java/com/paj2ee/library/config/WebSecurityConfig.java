@@ -32,26 +32,37 @@ public class WebSecurityConfig {
                         "/admin/users/{id}/enable",
                         "/admin/users/{id}/disable",
 
-                        "/admin/books",
-                        "/admin/books/{id}",
                         "/admin/books/create_book",
                         "/admin/books/update-book/{id}",
                         "/admin/books/delete-book/{id}",
 
-                        "/admin/book-collections",
-                        "/admin/book-collections/{id}",
                         "/admin/book-collections/create-collection",
                         "/admin/book-collections/update-collection/{id}",
                         "/admin/book-collections/delete-collection/{id}",
 
                         "/admin/books/{bookId}/book-collections/{bookCollectionId}/add",
-                        "/admin/books/{bookId}/book-collections/{bookCollectionId}/remove"
+                        "/admin/books/{bookId}/book-collections/{bookCollectionId}/remove",
+
+                        "/admin/book-wrappers",
+                        "/admin/book-wrappers/{id}",
+                        "/admin/book-wrappers/create-wrapper",
+                        "/admin/book-wrappers/{id}/update-wrapper",
+                        "/admin/book-wrappers/{id}/delete-wrapper"
                     ).hasRole("ADMIN")
                     .requestMatchers(
                         "/dashboard-header",
 
                         "/books",
-                        "/books{id}"
+                        "/books{id}",
+
+                        "/book-collections",
+                        "/book-collections/{id}",
+
+                        "/book-loans",
+                        "/book-loans/{id}",
+                        "/book-loans/create-book-loan",
+                        "/book-loans/{id}/update-book-loan",
+                        "/book-loans/{id}/delete-book-loan"
                     ).hasAnyRole("ADMIN", "USER")
                     .anyRequest()
                     .authenticated()
