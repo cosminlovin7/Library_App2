@@ -26,11 +26,32 @@ public class WebSecurityConfig {
                         "/hello"
                     ).hasRole("USER")
                     .requestMatchers(
+                        "/users",
                         "/hello-admin",
-                        "/users"
+
+                        "/admin/users/{id}/enable",
+                        "/admin/users/{id}/disable",
+
+                        "/admin/books",
+                        "/admin/books/{id}",
+                        "/admin/books/create_book",
+                        "/admin/books/update-book/{id}",
+                        "/admin/books/delete-book/{id}",
+
+                        "/admin/book-collections",
+                        "/admin/book-collections/{id}",
+                        "/admin/book-collections/create-collection",
+                        "/admin/book-collections/update-collection/{id}",
+                        "/admin/book-collections/delete-collection/{id}",
+
+                        "/admin/books/{bookId}/book-collections/{bookCollectionId}/add",
+                        "/admin/books/{bookId}/book-collections/{bookCollectionId}/remove"
                     ).hasRole("ADMIN")
                     .requestMatchers(
-                        "/dashboard-header"
+                        "/dashboard-header",
+
+                        "/books",
+                        "/books{id}"
                     ).hasAnyRole("ADMIN", "USER")
                     .anyRequest()
                     .authenticated()
@@ -40,10 +61,8 @@ public class WebSecurityConfig {
             })
             .cors(Customizer.withDefaults())
             .csrf((configurer) ->
-                configurer.ignoringRequestMatchers(
-                    "/register",
-                    "/login"
-                )
+                configurer
+                    .disable()
             )
         ;
 
