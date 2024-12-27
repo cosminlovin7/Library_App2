@@ -116,6 +116,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([basicAuthInterceptor]),
     ),
     //@NOTE: https://angular.dev/api/core/provideAppInitializer
-    provideAppInitializer(initializerFn), provideAnimationsAsync()
+    provideAppInitializer(initializerFn), provideAnimationsAsync(), provideAnimationsAsync()
   ]
 };

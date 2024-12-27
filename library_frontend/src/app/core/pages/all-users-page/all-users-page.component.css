@@ -62,84 +62,62 @@ tr:nth-child(even) {
 }
 
 .lib-all-users-page-table {
-  border: 1px solid lightgray;
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  /*border-color: black;*/
 
+  color: black;
 }
 
-.lib-all-users-page-table th, td {
-  border: 1px solid lightgray; /* Borders for rows and columns */
-  padding: 8px;
+.lib-all-users-page-table .mat-mdc-header-row {
+  background-color: #03122F;
+
+  color: white;
 }
 
-.lib-all-users-page-table-head-row {
-  /*display: flex;*/
+.lib-all-users-page-table .mat-mdc-header-row th {
+  color: white;
 }
 
-.lib-all-users-page-table-th-ID {
+.lib-all-users-page-table .mat-mdc-row {
+  color: black;
+}
+
+.lib-all-users-page-table .mdc-data-table__content tr:nth-child(odd) {
+  background-color: #FFFFFF;
+}
+
+.lib-all-users-page-table .mdc-data-table__content tr:nth-child(even) {
+  background-color: #F1916D;
+}
+
+.lib-all-users-page-table-paginator {
+  background-color: #03122F;
+}
+
+.lib-all-users-page-table .mat-column-position {
   width: 50px;
 }
 
-.lib-all-users-page-table-th-username {
-  width: 250px;
+.lib-all-users-page-table .mat-column-name {
+  width: 150px;
 }
 
-.lib-all-users-page-table-th-enabled {
-  width: 50px;
+.lib-all-users-page-table .mat-column-weight {
+  width: 150px;
 }
 
-.lib-all-users-page-table-th-id-photo {
-  width: 200px;
+.lib-all-users-page-table .mat-column-symbol {
+  width: 150px;
 }
 
-.lib-all-users-page-table-th-authorities {
-  width: 300px;
-}
-
-.lib-all-users-page-table-th-actions {
-  width: 300px;
-}
-
-.lib-all-users-page-table-th-empty {
-}
-
-.lib-all-users-page-table-td-ID {
-  width: 50px;
-}
-
-.lib-all-users-page-table-td-username {
-  width: 250px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lib-all-users-page-table-td-enabled {
-  width: 50px;
-}
-
-.lib-all-users-page-table-td-id-photo {
-  width: 200px;
-
+.lib-all-users-page-user-status-radiobox {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  color: black;
 }
 
-.lib-all-users-page-table-td-authorities {
-  width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.lib-all-users-page-table-td-actions {
-  width: 300px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.lib-all-users-page-table-td-empty {
-
+::ng-deep .lib-all-users-page-user-status-radiobox .mdc-label {
+  color: black !important;
 }

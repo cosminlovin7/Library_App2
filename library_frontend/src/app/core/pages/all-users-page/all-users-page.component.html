@@ -1,94 +1,123 @@
-<div *ngIf="loading; else content">
-  <p>Loading...</p>
-</div>
-
-<ng-template #content>
-  <div class="lib-all-users-page-container">
-    <div class="lib-all-users-page-filter-wrapper">
-      <div class="lib-all-uses-page-filter-options-wrapper">
-        <fieldset class="lib-all-users-page-options-fieldset">
-          <legend>Options:</legend>
-          <div class="lib-all-uses-page-filter-options-container">
-            <fieldset class="lib-all-users-page-user-status-fieldset">
-              <legend>User status:</legend>
-              <div>
-                <input id="filterUserStatusEnabled" type="checkbox" [(ngModel)]="isFilterActiveEnabled" (input)="handleOnChangeFilterUserStatusEnabledCheckbox($event)" />
-                <label for="filterUserStatusEnabled">Enabled</label>
-              </div>
-              <div>
-                <input id="filterUserStatusDisabled" type="checkbox" [(ngModel)]="isFilterActiveDisabled" (input)="handleOnChangeFilterUserStatusDisabledCheckbox($event)" />
-                <label for="filterUserStatusDisabled">Disabled</label>
-              </div>
-              <div>
-                <input id="filterUserStatusAny" type="checkbox" [(ngModel)]="isFilterActiveAny" (input)="handleOnChangeFilterUserStatusAnyCheckbox($event)" />
-                <label for="filterUserStatusAny">Any</label>
-              </div>
-            </fieldset>
-          </div>
-        </fieldset>
-      </div>
-    </div>
-    <div class="lib-all-users-page-table-wrapper">
-      <table class="lib-all-users-page-table">
-        <thead>
-          <tr class="lib-all-users-page-table-head-row">
-            <th class="lib-all-users-page-table-th-ID">ID</th>
-            <th class="lib-all-users-page-table-th-username">Username</th>
-            <th class="lib-all-users-page-table-th-enabled">Enabled</th>
-            <th class="lib-all-users-page-table-th-id-photo">Identity Photo File</th>
-            <th class="lib-all-users-page-table-th-authorities">Authorities</th>
-            <th class="lib-all-users-page-table-th-actions">Actions</th>
-            <th class="lib-all-users-page-table-th-empty"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users">
-            <td>
-              <div class="lib-all-users-page-table-td-ID">
-                {{ user.id }}
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-username">
-                {{ user.username }}
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-enabled">
-                {{ user.enabled }}
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-id-photo">
-                @if (null != user.identityPhotoFile) {
-                  <button (click)="handleDownloadUserIdentityPhotoFile(user.id)">Download</button>
-                }
-                @else {
-                  -
-                }
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-authorities">
-                {{ user.authorities }}
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-actions">
-                @if (false === user.enabled) {
-                  <button (click)="enableUser(user.id)">Enable</button>
-                }
-                @else {
-              }
-              </div>
-            </td>
-            <td>
-              <div class="lib-all-users-page-table-td-empty">
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="lib-all-users-page-container">
+  <div class="lib-all-users-page-filter-wrapper">
+    <div class="lib-all-uses-page-filter-options-wrapper">
+      <fieldset class="lib-all-users-page-options-fieldset">
+        <legend>Filters:</legend>
+        <div class="lib-all-uses-page-filter-options-container">
+          <fieldset class="lib-all-users-page-user-status-fieldset">
+            <legend>User status:</legend>
+            <mat-radio-group
+              aria-label="Select an option"
+              class="lib-all-users-page-user-status-radiobox"
+              (change)="handleOnChangeFilterUserStatusCheckbox($event)"
+              value="{{filterUserStatus}}"
+            >
+              <mat-radio-button class="lib-all-users-page-user-status-radiobox-button" value="enabled">Enabled</mat-radio-button>
+              <mat-radio-button class="lib-all-users-page-user-status-radiobox-button" value="disabled">Disabled</mat-radio-button>
+              <mat-radio-button class="lib-all-users-page-user-status-radiobox-button" value="any">Any</mat-radio-button>
+            </mat-radio-group>
+          </fieldset>
+        </div>
+      </fieldset>
     </div>
   </div>
-</ng-template>
+  <div class="lib-all-users-page-table-wrapper">
+    <table mat-table [dataSource]="dataSource" class="lib-all-users-page-table">
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef> Weight </th>
+        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef> Symbol </th>
+        <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [length]="data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements"
+
+                   class="lib-all-users-page-table-paginator"
+    >
+    </mat-paginator>
+<!--      <table class="lib-all-users-page-table">-->
+<!--        <thead>-->
+<!--          <tr class="lib-all-users-page-table-head-row">-->
+<!--            <th class="lib-all-users-page-table-th-ID">ID</th>-->
+<!--            <th class="lib-all-users-page-table-th-username">Username</th>-->
+<!--            <th class="lib-all-users-page-table-th-enabled">Enabled</th>-->
+<!--            <th class="lib-all-users-page-table-th-id-photo">Identity Photo File</th>-->
+<!--            <th class="lib-all-users-page-table-th-authorities">Authorities</th>-->
+<!--            <th class="lib-all-users-page-table-th-actions">Actions</th>-->
+<!--            <th class="lib-all-users-page-table-th-empty"></th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--          <tr *ngFor="let user of users">-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-ID">-->
+<!--                {{ user.id }}-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-username">-->
+<!--                {{ user.username }}-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-enabled">-->
+<!--                {{ user.enabled }}-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-id-photo">-->
+<!--                @if (null != user.identityPhotoFile) {-->
+<!--                  <button (click)="handleDownloadUserIdentityPhotoFile(user.id)">Download</button>-->
+<!--                }-->
+<!--                @else {-->
+<!--                  - -->
+<!--                }-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-authorities">-->
+<!--                {{ user.authorities }}-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-actions">-->
+<!--                @if (false === user.enabled) {-->
+<!--                  <button (click)="enableUser(user.id)">Enable</button>-->
+<!--                }-->
+<!--                @else {-->
+<!--              }-->
+<!--              </div>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <div class="lib-all-users-page-table-td-empty">-->
+<!--              </div>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+  </div>
+</div>
