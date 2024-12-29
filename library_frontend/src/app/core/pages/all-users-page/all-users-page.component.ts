@@ -13,6 +13,12 @@ import {
 import {MatPaginator} from '@angular/material/paginator';
 import {FormsModule} from '@angular/forms';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
+import {PageOfUserInfoDto} from '../../models/page-of-user-info-dto';
+import {isLoading} from '../../../app.component';
+import {MatProgressBar} from '@angular/material/progress-bar';
+import {NgIf} from '@angular/common';
+import {MatButton} from '@angular/material/button';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-all-users-page',
@@ -35,49 +41,29 @@ import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
     FormsModule,
     MatRadioGroup,
     MatRadioButton,
+    MatProgressBar,
+    NgIf,
+    MatButton,
   ],
   styleUrl: './all-users-page.component.css'
 })
 export class AllUsersPageComponent implements OnInit, AfterViewInit {
 
+  DEFAULT_PAGE: number = 0;
+  DEFAULT_PAGE_SIZE: number = 5;
+  total: number = 0;
   users: UserInfoDto[] = [];
   filterUserStatus: string = 'any';
+  page: number = this.DEFAULT_PAGE;
+  pageSize: number = this.DEFAULT_PAGE_SIZE;
   loading: boolean = true;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+  displayedColumns: string[] = ['id', 'username', 'email', 'phoneNumber', 'enabled', 'authorities', 'actions'];
+  dataSource: MatTableDataSource<UserInfoDto> = new MatTableDataSource(this.users);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  }
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {
 
-  applyFilter(): void {
-    console.log('apply filter clicked...');
-  }
-
-  enableUser(id: number) {
-    console.log('#todo enable user id: ', id);
-  }
-
-  handleOnChangeFilterUserStatusEnabledCheckbox(event: any) {
-    var me = this;
-
-    if (event && event.target && event.target.value) {
-      me.router.navigate(['dashboard', 'users'], { queryParams: { userStatus: 'enabled'} });
-    }
-  }
-
-  handleOnChangeFilterUserStatusDisabledCheckbox(event: any) {
-    var me = this;
-
-    if (event && event.target && event.target.value) {
-      me.router.navigate(['dashboard', 'users'], { queryParams: { userStatus: 'disabled'} });
-    }
-  }
-
-  handleOnChangeFilterUserStatusAnyCheckbox(event: any) {
-    var me = this;
-
-    if (event && event.target && event.target.value) {
-      me.router.navigate(['dashboard', 'users'], { queryParams: { userStatus: 'any'} });
-    }
   }
 
   handleOnChangeFilterUserStatusCheckbox(event: any) {
@@ -85,82 +71,153 @@ export class AllUsersPageComponent implements OnInit, AfterViewInit {
 
     if (event && event.value) {
       me.filterUserStatus = event.value;
-      me.router.navigate(['dashboard', 'users'], { queryParams: { userStatus: event.value} });
+
+      me.router.navigate(['dashboard', 'users'], {
+        queryParams: {
+          userStatus: me.filterUserStatus,
+          page: me.page,
+          pageSize: me.pageSize
+        }
+      });
     }
   }
 
-  handleDownloadUserIdentityPhotoFile(id: number) {
-    console.log('#todo downloading user identity photo file...');
-  }
-
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  data = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-    {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-    {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-    {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-    {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-    {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-    {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-    {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-    {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-    {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-    {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-    {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-    {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-    {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-    {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-    {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-    // Add more rows as needed
-  ];
-  dataSource = new MatTableDataSource(this.data);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngOnInit() {
+  handleOnClickButtonDownloadIdentityPhotoFile(element: any) {
     let me = this;
 
-    me.route.queryParams.subscribe(params => {
-      let filterUserStatus = params['userStatus'];
+    if (null != element) {
+      let identityPhotoFile = element.identityPhotoFile;
 
+      if (null != identityPhotoFile) {
 
-      let url = `http://localhost:9922/users`;
-      if (null != filterUserStatus) {
+        let base64FileContent = identityPhotoFile.base64FileContent;
+        let meta = identityPhotoFile.meta;
 
-        switch (filterUserStatus) {
-          case 'enabled':
-            me.filterUserStatus = filterUserStatus;
-            url = url + "?userStatus=" + filterUserStatus;
-            break;
-          case 'disabled':
-            me.filterUserStatus = filterUserStatus;
-            url = url + "?userStatus=" + filterUserStatus;
-            break;
-          case 'any':
-            me.filterUserStatus = filterUserStatus;
-            url = url + "?userStatus=" + filterUserStatus;
-            break;
-          default:
-            console.warn('Unknown filterUserStatus: ' + filterUserStatus);
-            break;
+        if (null != base64FileContent && null != meta) {
+
+          let base64Data = "data:" + meta.fileType + ';base64,' + base64FileContent;
+
+          const downloadLink = document.createElement("a")
+          downloadLink.href = base64Data
+          downloadLink.download = meta.fileName;
+          downloadLink.click()
         }
       }
-      me.http.get<UserInfoDto[]>(url).subscribe(
-        {
-          next(value: UserInfoDto[]) {
-            console.log(value);
+    }
 
-            me.users = value;
+  }
+
+  handleOnClickButtonEnableUser(element: any) {
+    let me = this;
+
+    if (null != element && false == element.enabled) {
+      me.loading = true;
+
+      me.http.post("http://localhost:9922/admin/users/" + element.id + "/enable", null).subscribe(
+        {
+          next() {
+            me.snackBar.open("User enabled successfully!", "Success", {
+              duration: 2000,  // Duration in milliseconds (optional)
+              verticalPosition: "top",
+            });
 
             me.loading = false;
           },
           error(error) {
             console.log(error);
 
+            me.snackBar.open("An error occurred while trying to enable the user!", "Error", {
+              duration: 2000,
+              verticalPosition: "top",
+            });
+
+            me.loading = false;
+          },
+        }
+      )
+    }
+  }
+
+  ngOnInit() {
+    let me = this;
+
+    me.route.queryParams.subscribe(params => {
+
+      me.loading = true;
+      isLoading.set(true);
+
+      let _filterUserStatus = params['userStatus'];
+      let _page = null != params['page'] ? params['page'] : me.DEFAULT_PAGE;
+      let _pageSize = null != params['pageSize'] ? params['pageSize'] : me.DEFAULT_PAGE_SIZE;
+
+      let hasAnyParams = false;
+
+      let url = `http://localhost:9922/users`;
+      if (null != _filterUserStatus) {
+
+        hasAnyParams = true;
+
+        switch (_filterUserStatus) {
+          case 'enabled':
+            me.filterUserStatus = _filterUserStatus;
+            url = url + "?userStatus=" + _filterUserStatus;
+
+            break;
+          case 'disabled':
+            me.filterUserStatus = _filterUserStatus;
+            url = url + "?userStatus=" + _filterUserStatus;
+            break;
+          case 'any':
+            me.filterUserStatus = _filterUserStatus;
+            url = url + "?userStatus=" + _filterUserStatus;
+            break;
+          default:
+            console.warn('Unknown filterUserStatus: ' + _filterUserStatus);
+            me.filterUserStatus = 'any';
+            hasAnyParams = false;
+            break;
+        }
+
+      } else {
+        me.filterUserStatus = 'any';
+      }
+
+      if (null != _page && null != _pageSize) {
+        me.page = _page;
+        me.pageSize = _pageSize;
+      } else {
+        me.page = me.DEFAULT_PAGE;
+        me.pageSize = me.DEFAULT_PAGE_SIZE;
+      }
+
+      if (hasAnyParams) {
+        url = url + "&";
+      } else {
+        hasAnyParams = true;
+        url = url + "?";
+      }
+
+      url = url + "page=" + me.page + "&pageSize=" + me.pageSize;
+
+      me.http.get<PageOfUserInfoDto>(url).subscribe(
+        {
+          next(value: PageOfUserInfoDto) {
+            me.users = value.ls;
+            me.total = value.total;
+
+            me.dataSource.data = me.users;
+            setTimeout(function() {
+              me.paginator.pageIndex = me.page;
+              me.paginator.length = me.total;
+            }, 0);
+
+            isLoading.set(false);
+            me.loading = false;
+          },
+          error(error) {
+            console.log(error);
+
+            isLoading.set(false);
             me.loading = false;
           },
         }
@@ -172,35 +229,24 @@ export class AllUsersPageComponent implements OnInit, AfterViewInit {
     let me = this;
 
     me.dataSource.paginator = me.paginator;
+
+    me.paginator.page.subscribe(event => {
+      if (
+        null != event
+        && null != event.pageIndex
+        && null != event.pageSize
+      ) {
+        me.page = event.pageIndex; // Current page index
+        me.pageSize = event.pageSize; // Selected page size
+
+        me.router.navigate(['dashboard', 'users'], {
+          queryParams: {
+            userStatus: me.filterUserStatus,
+            page: me.page,
+            pageSize: me.pageSize
+          }
+        });
+      }
+    });
   }
 }
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-  {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-  {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-  {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-  {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-  {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-  {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-  {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-  {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-  {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-];

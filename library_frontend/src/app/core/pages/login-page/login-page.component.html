@@ -126,6 +126,23 @@
             <div class="lib-custom-login-page-section-register-form-group">
               <input
                 class="lib-custom-login-page-section-register-form-input"
+                placeholder="Email"
+                id="register_email"
+                type="text"
+                formControlName="email"
+              >
+            </div>
+            <div *ngIf="registerForm.get('email')?.errors && registerForm.get('email')?.touched">
+              <small *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</small>
+              <small *ngIf="registerForm.get('email')?.errors?.['minlength']">Email must be at least 8 characters.</small>
+              <small *ngIf="registerForm.get('email')?.errors?.['specialCharacter']">Email cannot contain special characters.</small>
+            </div>
+          </div>
+
+          <div class="lib-custom-login-page-section-register-form-group-wrapper">
+            <div class="lib-custom-login-page-section-register-form-group">
+              <input
+                class="lib-custom-login-page-section-register-form-input"
                 placeholder="Phone number"
                 id="register_phoneNumber"
                 type="text"

@@ -42,11 +42,11 @@ tr:nth-child(even) {
   width: 100%;
 }
 
-.lib-all-uses-page-filter-options-wrapper {
+.lib-all-users-page-filter-options-wrapper {
   padding: 10px;
 }
 
-.lib-all-uses-page-filter-options-container {
+.lib-all-users-page-filter-options-container {
   display: flex;
 }
 
@@ -96,20 +96,36 @@ tr:nth-child(even) {
   background-color: #03122F;
 }
 
-.lib-all-users-page-table .mat-column-position {
+.lib-all-users-page-table .mat-column-id {
   width: 50px;
 }
 
-.lib-all-users-page-table .mat-column-name {
+.lib-all-users-page-table .mat-column-username {
   width: 150px;
 }
 
-.lib-all-users-page-table .mat-column-weight {
+.lib-all-users-page-table .mat-column-email {
   width: 150px;
 }
 
-.lib-all-users-page-table .mat-column-symbol {
+.lib-all-users-page-table .mat-column-phoneNumber {
   width: 150px;
+}
+
+.lib-all-users-page-table .mat-column-enabled {
+  width: 150px;
+}
+
+.lib-all-users-page-table .mat-column-authorities {
+  width: 150px;
+}
+
+.lib-all-users-page-table .mat-column-identityPhotoFile{
+  width: 150px;
+}
+
+.lib-all-users-page-table .mat-column-identityPhotoFile{
+  width: 300px;
 }
 
 .lib-all-users-page-user-status-radiobox {
@@ -121,3 +137,22 @@ tr:nth-child(even) {
 ::ng-deep .lib-all-users-page-user-status-radiobox .mdc-label {
   color: black !important;
 }
+
+.lib-all-users-page-button {
+  color: white !important;
+  background-color: #413B61 !important;
+}
+
+.lib-all-users-page-button:hover {
+  background-color: #AE7DAC !important;
+}
+
+.lib-custom-header-progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #03122F;
+
+  display: flex;
+  align-items: center;
+}
+

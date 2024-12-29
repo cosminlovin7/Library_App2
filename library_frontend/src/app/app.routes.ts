@@ -5,6 +5,7 @@ import {LoginPageComponent} from './core/pages/login-page/login-page.component';
 import {authLoginGuard} from './core/helpers/auth-login.guard';
 import {authDashboardGuard} from './core/helpers/auth-dashboard.guard';
 import {AllUsersPageComponent} from './core/pages/all-users-page/all-users-page.component';
+import {InventoryPageComponent} from './core/pages/inventory-page/inventory-page.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full',},
@@ -15,7 +16,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'users',
-        component: AllUsersPageComponent
+        component: AllUsersPageComponent,
+      },
+      {
+        path: 'inventory',
+        component: InventoryPageComponent,
       }
     ]
   },

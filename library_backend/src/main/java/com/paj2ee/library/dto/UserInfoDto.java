@@ -6,6 +6,7 @@ public record UserInfoDto (
 	Long id,
 	String username,
 	String email,
+	String phoneNumber,
 	boolean enabled,
 	List<String> authorities,
 	FileInfoDto identityPhotoFile

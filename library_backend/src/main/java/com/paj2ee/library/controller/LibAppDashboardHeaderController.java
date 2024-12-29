@@ -88,6 +88,7 @@ public class LibAppDashboardHeaderController {
 						libAppUser.getId(),
 						libAppUser.getUsername(),
 						libAppUser.getEmail(),
+						libAppUser.getPhoneNumber(),
 						libAppUser.isEnabled(),
 						authorities,
 						fileInfoDto

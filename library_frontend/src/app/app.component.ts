@@ -2,10 +2,11 @@ import {Component, effect, Injectable, OnInit, signal} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {LoadingSpinnerComponent} from './shared/components/loading-spinner/loading-spinner.component';
+import {MatProgressBar} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoadingSpinnerComponent],
+  imports: [RouterOutlet, LoadingSpinnerComponent, MatProgressBar],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

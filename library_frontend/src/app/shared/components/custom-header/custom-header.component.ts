@@ -26,8 +26,9 @@ export class CustomHeaderComponent {
   }
 
   handleInventoryClick() {
-    //#todo
-    console.log('#todo');
+    let me = this;
+
+    me.router.navigate(['dashboard/inventory']);
   }
 
   handleLogoutClick() {

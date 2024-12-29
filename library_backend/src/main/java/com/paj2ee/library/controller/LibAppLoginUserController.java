@@ -71,6 +71,7 @@ public class LibAppLoginUserController {
 			libAppUser.getId(),
 			libAppUser.getUsername(),
 			libAppUser.getEmail(),
+			libAppUser.getPhoneNumber(),
 			libAppUser.isEnabled(),
 			authoritiesAsString,
 			fileInfoDto

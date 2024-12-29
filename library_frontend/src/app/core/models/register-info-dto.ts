@@ -1,6 +1,7 @@
 export interface RegisterInfoDto {
   username: string | undefined | null;
   password: string | undefined | null;
+  email: string | undefined | null;
   phoneNumber: string | undefined | null;
 
   fileName: string | undefined | null;

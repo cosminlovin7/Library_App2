@@ -2,6 +2,7 @@ package com.paj2ee.library.controller;
 
 import com.paj2ee.library.dto.FileInfoDto;
 import com.paj2ee.library.dto.FileInfoMetaDto;
+import com.paj2ee.library.dto.PageOfUserInfoDto;
 import com.paj2ee.library.dto.UserInfoDto;
 import com.paj2ee.library.model.LibAppFile;
 import com.paj2ee.library.model.LibAppUser;
@@ -9,6 +10,10 @@ import com.paj2ee.library.model.LibAppUserAuthority;
 import com.paj2ee.library.repository.LibAppUserRepository;
 import com.paj2ee.library.service.DiskStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
@@ -31,7 +36,9 @@ public class LibAppUserController {
 
 	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
 	@GetMapping("/users")
-	public ResponseEntity<List<UserInfoDto>> getAllUsers(
+	public ResponseEntity<PageOfUserInfoDto> getAllUsers(
+		@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+		@RequestParam(name = "pageSize", required = false, defaultValue = "5") int pageSize,
 		@RequestParam(name = "userStatus", required = false, defaultValue = "any") String userStatus
 	) {
 		Specification<LibAppUser> allSpec =
@@ -52,10 +59,14 @@ public class LibAppUserController {
 			}
 		}
 
-		List<LibAppUser> users = libAppUserRepository.findAll(allSpec);
+		Pageable pageOptions = PageRequest.of(page, pageSize, Sort.by("id").ascending());
 
+		Page<LibAppUser> usersPage = libAppUserRepository.findAll(allSpec, pageOptions);
+
+		List<LibAppUser> usersLs = usersPage.getContent();
+		long total = usersPage.getTotalElements();
 		List<UserInfoDto> usersDto = new ArrayList<>();
-		for (LibAppUser user : users) {
+		for (LibAppUser user : usersLs) {
 
 			Set<LibAppUserAuthority> libAppUserAuthorities = user.getAuthorities();
 			List<String> authorities = new ArrayList<>();
@@ -89,6 +100,7 @@ public class LibAppUserController {
 				user.getId(),
 				user.getUsername(),
 				user.getEmail(),
+				user.getPhoneNumber(),
 				user.isEnabled(),
 				authorities,
 				fileInfoDto
@@ -97,7 +109,12 @@ public class LibAppUserController {
 			usersDto.add(userInfoDto);
 		}
 
-		return ResponseEntity.ok(usersDto);
+		PageOfUserInfoDto pageOfUserInfoDto = new PageOfUserInfoDto(
+			total,
+			usersDto
+		);
+
+		return ResponseEntity.ok(pageOfUserInfoDto);
 	}
 
 	private static Specification<LibAppUser> rootSpec() {

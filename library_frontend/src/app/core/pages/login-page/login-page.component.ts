@@ -33,6 +33,7 @@ export class LoginPageComponent {
   registerForm = new FormGroup({
     username: new FormControl('Cosminel2000', [Validators.required, Validators.minLength(8), Validators.maxLength(30), loginUsernameSpecialCharacterValidator()]),
     password: new FormControl('Cosminel2000', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+    email: new FormControl('cosmiinreus@gmail.com', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
     phoneNumber: new FormControl('0753690515', [Validators.required, Validators.pattern('\\d{10}')]),
     identityCardPhoto: new FormControl('', [Validators.required, registerIdentityCardPhotoValidator()])
   })
@@ -143,6 +144,7 @@ export class LoginPageComponent {
         let registerInfoDto: RegisterInfoDto = {
           username: me.registerForm.value.username,
           password: me.registerForm.value.password,
+          email: me.registerForm.value.email,
           phoneNumber: me.registerForm.value.phoneNumber,
 
           fileName: fileContent.name,

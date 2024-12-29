@@ -97,6 +97,7 @@ public class LibAppRegisterUserController {
 		pendingLibAppUser.setUsername(cmd.username());
 		pendingLibAppUser.setPassword(cmd.password());
 		pendingLibAppUser.setEnabled(false);
+		pendingLibAppUser.setEmail(cmd.email());
 		pendingLibAppUser.setPhoneNumber(cmd.phoneNumber());
 		pendingLibAppUser.setIdentityCardFile(updatedLibAppFile);
 		LibAppUser libAppUser = libAppUserRepository.save(pendingLibAppUser);
