@@ -1,6 +1,6 @@
-import {BookInfoDto} from './book-info-dto';
+import {BookWrapperInfoDto} from './book-wrapper-info-dto';
 
 export interface PageOfBookWrapperInfoDto {
   total: number;
-  ls: BookInfoDto[];
+  ls: BookWrapperInfoDto[];
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -38,6 +39,16 @@ public class LibAppBookCollectionController {
 	public ResponseEntity<List<BookCollectionDto>> getCollections() {
 
 		List<LibAppBookCollection> bookCollectionLs = libAppBookCollectionRepository.findAll();
+
+		bookCollectionLs.sort((o1, o2) -> {
+			if (o1.getId() < o2.getId()) {
+				return -1;
+			} else if (o1.getId() > o2.getId()) {
+				return 1;
+			}
+
+			return 0;
+		});
 
 		List<BookCollectionDto> outLs = new ArrayList<>();
 		for (LibAppBookCollection bookCollection : bookCollectionLs) {

@@ -1,9 +1,9 @@
 import {
-  UniqueSelectionDispatcher
-} from "./chunk-XBEWYCZR.js";
-import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RYFB23UO.js";
+import {
+  UniqueSelectionDispatcher
+} from "./chunk-XBEWYCZR.js";
 import {
   FocusMonitor,
   MatCommonModule,
@@ -13,7 +13,7 @@ import {
   _IdGenerator,
   _MatInternalFormField,
   _StructuralStylesLoader
-} from "./chunk-LA5QBV3F.js";
+} from "./chunk-3ERFZRXE.js";
 import "./chunk-NIC6FLW6.js";
 import {
   ANIMATION_MODULE_TYPE,

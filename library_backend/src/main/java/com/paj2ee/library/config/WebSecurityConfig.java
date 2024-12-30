@@ -32,6 +32,8 @@ public class WebSecurityConfig {
                         "/admin/users/{id}/enable",
                         "/admin/users/{id}/disable",
 
+                        "/admin/books",
+                        "/admin/books/{id}",
                         "/admin/books/create_book",
                         "/admin/books/update-book/{id}",
                         "/admin/books/delete-book/{id}",
@@ -51,9 +53,6 @@ public class WebSecurityConfig {
                     ).hasRole("ADMIN")
                     .requestMatchers(
                         "/dashboard-header",
-
-                        "/books",
-                        "/books{id}",
 
                         "/book-collections",
                         "/book-collections/{id}",

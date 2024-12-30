@@ -31,6 +31,279 @@
               <legend>Filters:</legend>
               <div class="lib-inventory-page-filter-options-container">
                 <form
+                  class="lib-inventory-book-stock-form"
+                  [formGroup]="bookStockFiltersForm"
+                  (ngSubmit)="handleBookStockFiltersFormSubmit()"
+                >
+                  <div class="lib-inventory-book-stock-form-container">
+                    <div class="lib-inventory-book-stock-form-group-wrapper">
+                      <div class="lib-inventory-book-stock-form-group">
+                        <input
+                          class="lib-inventory-book-stock-form-input"
+                          placeholder="Title"
+                          id="filters_title"
+                          type="text"
+                          formControlName="title"
+                        >
+                      </div>
+                      <div *ngIf="bookStockFiltersForm.get('title')?.errors && bookStockFiltersForm.get('title')?.touched">
+                        <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['minlength']">Title must be at least 2 characters.</small>
+                        <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['maxlength']">Title must be of maximum 30 characters.</small>
+                      </div>
+                    </div>
+
+                    <div class="lib-inventory-book-stock-form-group-wrapper">
+                      <div class="lib-inventory-book-stock-form-group">
+                        <input
+                          class="lib-inventory-book-stock-form-input"
+                          placeholder="Author"
+                          id="filters_author"
+                          type="text"
+                          formControlName="author"
+                        >
+                      </div>
+                      <div *ngIf="bookStockFiltersForm.get('author')?.errors && bookStockFiltersForm.get('author')?.touched">
+                        <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['minlength']">Author must be at least 2 characters.</small>
+                        <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['maxlength']">Author must be of maximum 30 characters.</small>
+                      </div>
+                    </div>
+
+                    <div class="lib-inventory-book-stock-form-group-wrapper">
+                      <div class="lib-inventory-book-stock-form-group">
+                        <input
+                          class="lib-inventory-book-stock-form-input"
+                          placeholder="Editure"
+                          id="filters_editure"
+                          type="text"
+                          formControlName="editure"
+                        >
+                      </div>
+                      <div *ngIf="bookStockFiltersForm.get('editure')?.errors && bookStockFiltersForm.get('editure')?.touched">
+                        <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['minlength']">Editure must be at least 2 characters.</small>
+                        <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['maxlength']">Editure must be of maximum 30 characters.</small>
+                      </div>
+                    </div>
+
+                    <div class="lib-inventory-book-stock-form-group-wrapper">
+                      <div class="lib-inventory-book-stock-form-group">
+                        <input
+                          class="lib-inventory-book-stock-form-input"
+                          placeholder="Collection"
+                          id="filters_collection"
+                          type="text"
+                          formControlName="collection"
+                        >
+                      </div>
+                      <div *ngIf="bookStockFiltersForm.get('collection')?.errors && bookStockFiltersForm.get('collection')?.touched">
+                        <small *ngIf="bookStockFiltersForm.get('collection')?.errors?.['minlength']">Collection must be at least 2 characters.</small>
+                        <small *ngIf="bookStockFiltersForm.get('collection')?.errors?.['maxlength']">Collection must be of maximum 30 characters.</small>
+                      </div>
+                    </div>
+
+                    <div class="lib-inventory-book-stock-form-group-wrapper">
+                      <div class="lib-inventory-book-stock-form-group">
+                        <input
+                          class="lib-inventory-book-stock-form-input"
+                          placeholder="Year of Publication"
+                          id="filters_yearOfPublication"
+                          type="text"
+                          formControlName="yearOfPublication"
+                        >
+                      </div>
+                      <div *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors && bookStockFiltersForm.get('yearOfPublication')?.touched">
+                        <small *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors?.['pattern']">Year of publication must be a number of 4 digits.</small>
+                      </div>
+                    </div>
+
+                    <div class="lib-inventory-book-stock-form-group-wrapper lib-inventory-book-stock-form-group-filter-button">
+                      <button
+                        class="lib-inventory-book-stock-form-filter-button"
+                        type="submit"
+                        [disabled]="!bookStockFiltersForm.valid"
+                      >
+                        Apply Filters
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="lib-inventory-page-table-wrapper">
+          <table mat-table [dataSource]="book_stock_dataSource" class="lib-inventory-page-table">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef> Quantity </th>
+              <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="availableQuantity">
+              <th mat-header-cell *matHeaderCellDef> Available Quantity </th>
+              <td mat-cell *matCellDef="let element"> {{element.availableQuantity}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef> Author </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.author}} </td>
+            </ng-container>
+
+<!--            <ng-container matColumnDef="bookFormat">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Book Format </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.bookFormat}} </td>-->
+<!--            </ng-container>-->
+
+            <ng-container matColumnDef="collection">
+              <th mat-header-cell *matHeaderCellDef> Collection </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.collection}} </td>
+            </ng-container>
+
+<!--            <ng-container matColumnDef="coverType">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Cover Type </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.coverType}} </td>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container matColumnDef="edition">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Edition </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.edition}} </td>-->
+<!--            </ng-container>-->
+
+            <ng-container matColumnDef="editure">
+              <th mat-header-cell *matHeaderCellDef> Editure </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.editure}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="isbn">
+              <th mat-header-cell *matHeaderCellDef> ISBN </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.isbn}} </td>
+            </ng-container>
+
+<!--            <ng-container matColumnDef="pageNr">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Page Nr. </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.pageNr}} </td>-->
+<!--            </ng-container>-->
+
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.title}} </td>
+            </ng-container>
+
+<!--            <ng-container matColumnDef="translator">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Translator </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.translator}} </td>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container matColumnDef="yearOfPublication">-->
+<!--              <th mat-header-cell *matHeaderCellDef> Year of publication </th>-->
+<!--              <td mat-cell *matCellDef="let element"> {{element.book?.yearOfPublication}} </td>-->
+<!--            </ng-container>-->
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let element">
+<!--                <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
+<!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="book_stock_displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: book_stock_displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator [length]="book_stock_total" [pageSize]="book_stock_pageSize" [pageSizeOptions]="[1, 5, 10]"
+                         showFirstLastButtons
+                         aria-label="Select page of periodic elements"
+                         (page)="handleBookStockPaginatorChange($event)"
+                         class="lib-inventory-page-table-paginator"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+      <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 1">
+        <div class="lib-inventory-page-table-wrapper">
+          <table mat-table [dataSource]="book_categories_dataSource" class="lib-inventory-page-table">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonDeleteBookCollection(element)">Delete</button>
+<!--                <button mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="book_categories_displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: book_categories_displayedColumns;"></tr>
+          </table>
+
+<!--          <mat-paginator [length]="book_categories_total" [pageSize]="book_categories_pageSize" [pageSizeOptions]="[1, 5, 10]"-->
+<!--                         showFirstLastButtons-->
+<!--                         aria-label="Select page of periodic elements"-->
+
+<!--                         class="lib-inventory-page-table-paginator"-->
+<!--          >-->
+<!--          </mat-paginator>-->
+        </div>
+        <div class="lib-inventory-page-tab-book-collection-create-wrapper">
+          <div class="lib-inventory-page-tab-book-collection-create-form-container">
+            <div class="lib-inventory-page-tab-book-collection-create-form-title-wrapper">
+              <span class="lib-inventory-page-tab-book-collection-create-form-title">Create Book Collection</span>
+            </div>
+            <form
+              class="lib-inventory-page-tab-book-collection-create-form"
+              [formGroup]="bookCollectionCreateForm"
+              (ngSubmit)="handleBookCollectionCreateFormSubmit()"
+            >
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Name"
+                    id="books_collection_create_name"
+                    type="text"
+                    formControlName="name"
+                  >
+                </div>
+                <div *ngIf="bookCollectionCreateForm.get('name')?.errors && bookCollectionCreateForm.get('name')?.touched">
+                  <small *ngIf="bookCollectionCreateForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</small>
+                  <small *ngIf="bookCollectionCreateForm.get('name')?.errors?.['maxlength']">Name must be of maximum 30 characters.</small>
+                  <small *ngIf="bookCollectionCreateForm.get('name')?.errors?.['pattern']">Name must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-books-form-group-filter-button">
+                <button
+                  class="lib-inventory-books-form-create-book-collection-button"
+                  type="submit"
+                  [disabled]="!bookCollectionCreateForm.valid"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 2">
+        <div class="lib-inventory-page-filter-wrapper">
+          <div class="lib-inventory-page-filter-options-wrapper">
+            <fieldset class="lib-inventory-page-options-fieldset">
+              <legend>Filters:</legend>
+              <div class="lib-inventory-page-filter-options-container">
+                <form
                   class="lib-inventory-books-form"
                   [formGroup]="booksFiltersForm"
                   (ngSubmit)="handleBooksFiltersFormSubmit()"
@@ -41,7 +314,7 @@
                         <input
                           class="lib-inventory-books-form-input"
                           placeholder="Title"
-                          id="filters_title"
+                          id="books_filters_title"
                           type="text"
                           formControlName="title"
                         >
@@ -57,7 +330,7 @@
                         <input
                           class="lib-inventory-books-form-input"
                           placeholder="Author"
-                          id="filters_author"
+                          id="books_filters_author"
                           type="text"
                           formControlName="author"
                         >
@@ -73,7 +346,7 @@
                         <input
                           class="lib-inventory-books-form-input"
                           placeholder="Editure"
-                          id="filters_editure"
+                          id="books_filters_editure"
                           type="text"
                           formControlName="editure"
                         >
@@ -89,7 +362,7 @@
                         <input
                           class="lib-inventory-books-form-input"
                           placeholder="Collection"
-                          id="filters_collection"
+                          id="books_filters_collection"
                           type="text"
                           formControlName="collection"
                         >
@@ -105,7 +378,7 @@
                         <input
                           class="lib-inventory-books-form-input"
                           placeholder="Year of Publication"
-                          id="filters_yearOfPublication"
+                          id="books_filters_yearOfPublication"
                           type="text"
                           formControlName="yearOfPublication"
                         >
@@ -139,7 +412,7 @@
 
             <ng-container matColumnDef="author">
               <th mat-header-cell *matHeaderCellDef> Author </th>
-              <td mat-cell *matCellDef="let element"> {{element.book.author}} </td>
+              <td mat-cell *matCellDef="let element"> {{element.author}} </td>
             </ng-container>
 
             <ng-container matColumnDef="bookFormat">
@@ -195,8 +468,8 @@
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef> Actions </th>
               <td mat-cell *matCellDef="let element">
-<!--                <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
-<!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+                <!--                <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
+                <!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
               </td>
             </ng-container>
 
@@ -207,49 +480,11 @@
           <mat-paginator [length]="books_total" [pageSize]="books_pageSize" [pageSizeOptions]="[1, 5, 10]"
                          showFirstLastButtons
                          aria-label="Select page of periodic elements"
-
+                         (page)="handleBooksPaginatorChange($event)"
                          class="lib-inventory-page-table-paginator"
           >
           </mat-paginator>
         </div>
-      </div>
-      <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 1">
-        <div class="lib-inventory-page-table-wrapper">
-          <table mat-table [dataSource]="book_categories_dataSource" class="lib-inventory-page-table">
-
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef> ID </th>
-              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef> Name </th>
-              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef> Actions </th>
-              <td mat-cell *matCellDef="let element">
-<!--                            <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
-<!--                            <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="book_categories_displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: book_categories_displayedColumns;"></tr>
-          </table>
-
-          <mat-paginator [length]="book_categories_total" [pageSize]="book_categories_pageSize" [pageSizeOptions]="[1, 5, 10]"
-                         showFirstLastButtons
-                         aria-label="Select page of periodic elements"
-
-                         class="lib-inventory-page-table-paginator"
-          >
-          </mat-paginator>
-        </div>
-      </div>
-      <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 2">
-        Content 3
       </div>
     </div>
   </div>
