@@ -95,7 +95,13 @@ tr:nth-child(even) {
   width: 100%;
   box-sizing: border-box;
 
-  padding: 10px;
+  padding: 0 10px 10px;
+}
+
+.lib-inventory-page-table-book-categories-wrapper {
+  height: 400px;
+
+  overflow: auto;
 }
 
 .lib-inventory-page-table {
@@ -299,8 +305,10 @@ tr:nth-child(even) {
   padding: 10px;
 
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
+  flex-direction: row;
 }
 
 .lib-inventory-page-tab-book-collection-create-form-container {
@@ -310,7 +318,7 @@ tr:nth-child(even) {
   background: #413B61;
   border-color: #413B61;
 
-  height: 300px;
+  /*height: 300px;*/
   width: 400px;
 
   display: flex;
@@ -318,6 +326,8 @@ tr:nth-child(even) {
   align-items: center;
 
   flex-direction: column;
+
+  padding: 20px;
 }
 
 .lib-inventory-page-tab-book-collection-create-form-title-wrapper {
@@ -326,6 +336,8 @@ tr:nth-child(even) {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  flex-direction: column;
 }
 
 .lib-inventory-page-tab-book-collection-create-form-title {
@@ -384,4 +396,9 @@ tr:nth-child(even) {
   border-color: #AE7DAC;
   color: #000000;
   cursor: pointer;
+}
+
+.lib-inventory-page-tab-book-collection-edit-form-container-edit-msg {
+  font-style: italic;
+  color: #F1916D ;
 }

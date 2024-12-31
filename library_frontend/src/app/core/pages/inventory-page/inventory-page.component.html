@@ -224,7 +224,7 @@
         </div>
       </div>
       <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 1">
-        <div class="lib-inventory-page-table-wrapper">
+        <div class="lib-inventory-page-table-wrapper lib-inventory-page-table-book-categories-wrapper">
           <table mat-table [dataSource]="book_categories_dataSource" class="lib-inventory-page-table">
 
             <ng-container matColumnDef="id">
@@ -240,12 +240,12 @@
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef> Actions </th>
               <td mat-cell *matCellDef="let element">
+                <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonEditBookCollection(element)">Edit</button>
                 <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonDeleteBookCollection(element)">Delete</button>
-<!--                <button mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="book_categories_displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="book_categories_displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: book_categories_displayedColumns;"></tr>
           </table>
 
@@ -291,6 +291,55 @@
                   [disabled]="!bookCollectionCreateForm.valid"
                 >
                   Create
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="lib-inventory-page-tab-book-collection-create-form-container">
+            <div class="lib-inventory-page-tab-book-collection-create-form-title-wrapper">
+              <span class="lib-inventory-page-tab-book-collection-create-form-title">Edit Book Collection</span>
+              <div *ngIf="null != bookCollectionEditForm.get('id')?.getRawValue() && '' != bookCollectionEditForm.get('id')?.getRawValue()"
+                   class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg-wrapper"
+              >
+                <span class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg"> Editing book collection with ID: {{bookCollectionEditForm.get('id')?.getRawValue()}}</span>
+              </div>
+            </div>
+            <form
+              class="lib-inventory-page-tab-book-collection-create-form"
+              [formGroup]="bookCollectionEditForm"
+              (ngSubmit)="handleBookCollectionEditFormSubmit()"
+            >
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <input
+                  class="lib-inventory-page-tab-book-collection-form-input"
+                  placeholder="ID"
+                  id="books_collection_edit_id"
+                  type="hidden"
+                  formControlName="id"
+                >
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Name"
+                    id="books_collection_edit_name"
+                    type="text"
+                    formControlName="name"
+                  >
+                </div>
+                <div *ngIf="bookCollectionEditForm.get('name')?.errors && bookCollectionEditForm.get('name')?.touched">
+                  <small *ngIf="bookCollectionEditForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</small>
+                  <small *ngIf="bookCollectionEditForm.get('name')?.errors?.['maxlength']">Name must be of maximum 30 characters.</small>
+                  <small *ngIf="bookCollectionEditForm.get('name')?.errors?.['pattern']">Name must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-books-form-group-filter-button">
+                <button
+                  class="lib-inventory-books-form-create-book-collection-button"
+                  type="submit"
+                  [disabled]="!bookCollectionEditForm.valid"
+                >
+                  Update
                 </button>
               </div>
             </form>
@@ -484,6 +533,128 @@
                          class="lib-inventory-page-table-paginator"
           >
           </mat-paginator>
+        </div>
+        <div class="lib-inventory-page-tab-book-collection-create-wrapper">
+          <div class="lib-inventory-page-tab-book-collection-create-form-container">
+            <div class="lib-inventory-page-tab-book-collection-create-form-title-wrapper">
+              <span class="lib-inventory-page-tab-book-collection-create-form-title">Create Book</span>
+            </div>
+            <form
+              class="lib-inventory-page-tab-book-collection-create-form"
+              [formGroup]="bookCreateForm"
+              (ngSubmit)="handleBookCreateFormSubmit()"
+            >
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Title"
+                    id="books_create_title"
+                    type="text"
+                    formControlName="title"
+                  >
+                </div>
+                <div *ngIf="bookCreateForm.get('title')?.errors && bookCreateForm.get('title')?.touched">
+                  <small *ngIf="bookCreateForm.get('title')?.errors?.['minlength']">Title must be at least 2 characters.</small>
+                  <small *ngIf="bookCreateForm.get('title')?.errors?.['maxlength']">Title must be of maximum 30 characters.</small>
+                  <small *ngIf="bookCreateForm.get('title')?.errors?.['pattern']">Title must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-books-form-group-filter-button">
+                <button
+                  class="lib-inventory-books-form-create-book-collection-button"
+                  type="submit"
+                  [disabled]="!bookCreateForm.valid"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="lib-inventory-page-tab-book-collection-create-form-container">
+            <div class="lib-inventory-page-tab-book-collection-create-form-title-wrapper">
+              <span class="lib-inventory-page-tab-book-collection-create-form-title">Edit Book</span>
+              <div *ngIf="null != bookEditForm.get('id')?.getRawValue() && '' != bookEditForm.get('id')?.getRawValue()"
+                   class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg-wrapper"
+              >
+                <span class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg"> Editing book with ID: {{bookEditForm.get('id')?.getRawValue()}}</span>
+              </div>
+            </div>
+            <form
+              class="lib-inventory-page-tab-book-collection-create-form"
+              [formGroup]="bookEditForm"
+              (ngSubmit)="handleBookEditFormSubmit()"
+            >
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <input
+                  class="lib-inventory-page-tab-book-collection-form-input"
+                  placeholder="ID"
+                  id="books_edit_id"
+                  type="hidden"
+                  formControlName="id"
+                >
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Title"
+                    id="books_edit_title"
+                    type="text"
+                    formControlName="title"
+                  >
+                </div>
+                <div *ngIf="bookEditForm.get('title')?.errors && bookEditForm.get('title')?.touched">
+                  <small *ngIf="bookEditForm.get('title')?.errors?.['minlength']">Title must be at least 2 characters.</small>
+                  <small *ngIf="bookEditForm.get('title')?.errors?.['maxlength']">Title must be of maximum 30 characters.</small>
+                  <small *ngIf="bookEditForm.get('title')?.errors?.['pattern']">Title must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Author"
+                    id="books_edit_author"
+                    type="text"
+                    formControlName="author"
+                  >
+                </div>
+                <div *ngIf="bookEditForm.get('author')?.errors && bookEditForm.get('author')?.touched">
+                  <small *ngIf="bookEditForm.get('author')?.errors?.['minlength']">Author must be at least 2 characters.</small>
+                  <small *ngIf="bookEditForm.get('author')?.errors?.['maxlength']">Author must be of maximum 30 characters.</small>
+                  <small *ngIf="bookEditForm.get('author')?.errors?.['pattern']">Author must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Collection"
+                    id="books_edit_collection"
+                    type="text"
+                    formControlName="collection"
+                  >
+                </div>
+                <div *ngIf="bookEditForm.get('collection')?.errors && bookEditForm.get('collection')?.touched">
+                  <small *ngIf="bookEditForm.get('collection')?.errors?.['minlength']">Collection must be at least 2 characters.</small>
+                  <small *ngIf="bookEditForm.get('collection')?.errors?.['maxlength']">Collection must be of maximum 30 characters.</small>
+                  <small *ngIf="bookEditForm.get('collection')?.errors?.['pattern']">Collection must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-books-form-group-filter-button">
+                <button
+                  class="lib-inventory-books-form-create-book-collection-button"
+                  type="submit"
+                  [disabled]="!bookEditForm.valid"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

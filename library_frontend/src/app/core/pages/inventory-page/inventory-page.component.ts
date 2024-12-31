@@ -102,7 +102,31 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
   })
 
   bookCollectionCreateForm = new FormGroup({
-    name: new FormControl('', [Validators.minLength(0), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+    name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+  })
+
+  bookCollectionEditForm = new FormGroup({
+    id: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+  })
+
+  bookCreateForm = new FormGroup({
+    title: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+  })
+
+  bookEditForm = new FormGroup({
+    id: new FormControl('', [Validators.required]),
+    title: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    author: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    collection: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    coverType: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    bookFormat: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    edition: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    editure: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    isbn: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    pageNr: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    translator: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    yearOfPublication: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
   })
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {
@@ -143,13 +167,152 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
           isLoading.set(false);
           me.loading = false;
 
-          me.snackBar.open("An error occurred while trying to delete the book collection!", "Error", {
+          me.snackBar.open("An error occurred while trying to create the book collection!", "Error", {
             duration: 2000,  // Duration in milliseconds (optional)
             verticalPosition: "top",
           });
         }
       }
     )
+  }
+
+  handleBookCollectionEditFormSubmit() {
+    let me = this;
+
+    if (me.bookCollectionEditForm.invalid) {
+
+      console.warn('Invalid book collection edit form');
+
+      return;
+    }
+
+    const id = me.bookCollectionEditForm.get('id')?.getRawValue();
+    const name = me.bookCollectionEditForm.get('name')?.getRawValue();
+
+    let url = `http://localhost:9922/admin/book-collections/update-collection/${id}`;
+    isLoading.set(true);
+    me.loading = true;
+    me.http.put(url, { name: name }).subscribe(
+      {
+        next() {
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("Book collection updated successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBookCollectionData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to update the book collection!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
+      }
+    )
+  }
+
+  handleBookCreateFormSubmit() {
+    let me = this;
+
+    if (me.bookCreateForm.invalid) {
+
+      console.warn('Invalid book create form');
+
+      return;
+    }
+
+    const title = me.bookCreateForm.get('title')?.getRawValue();
+
+    console.log('Create book', {
+      title
+    })
+
+    // let url = `http://localhost:9922/admin/book-collections/create-collection`;
+    // isLoading.set(true);
+    // me.loading = true;
+    // me.http.post(url, { name: name }).subscribe(
+    //   {
+    //     next() {
+    //       isLoading.set(false);
+    //       me.loading = false;
+    //
+    //       me.snackBar.open("Book created successfully!", "", {
+    //         duration: 2000,  // Duration in milliseconds (optional)
+    //         verticalPosition: "top",
+    //       });
+    //
+    //       me.refreshBookCollectionData();
+    //     },
+    //     error(error) {
+    //       console.log(error);
+    //
+    //       isLoading.set(false);
+    //       me.loading = false;
+    //
+    //       me.snackBar.open("An error occurred while trying to delete the book!", "Error", {
+    //         duration: 2000,  // Duration in milliseconds (optional)
+    //         verticalPosition: "top",
+    //       });
+    //     }
+    //   }
+    // )
+  }
+
+  handleBookEditFormSubmit() {
+    let me = this;
+
+    if (me.bookEditForm.invalid) {
+
+      console.warn('Invalid book edit form');
+
+      return;
+    }
+
+    const id = me.bookEditForm.get('id')?.getRawValue();
+    const title = me.bookEditForm.get('title')?.getRawValue();
+
+    console.log('Edit book', {
+      id, title
+    })
+
+    // let url = `http://localhost:9922/admin/book-collections/update-collection/${id}`;
+    // isLoading.set(true);
+    // me.loading = true;
+    // me.http.put(url, { name: name }).subscribe(
+    //   {
+    //     next() {
+    //       isLoading.set(false);
+    //       me.loading = false;
+    //
+    //       me.snackBar.open("Book updated successfully!", "", {
+    //         duration: 2000,  // Duration in milliseconds (optional)
+    //         verticalPosition: "top",
+    //       });
+    //
+    //       me.refreshBookCollectionData();
+    //     },
+    //     error(error) {
+    //       console.log(error);
+    //
+    //       isLoading.set(false);
+    //       me.loading = false;
+    //
+    //       me.snackBar.open("An error occurred while trying to update the book!", "Error", {
+    //         duration: 2000,  // Duration in milliseconds (optional)
+    //         verticalPosition: "top",
+    //       });
+    //     }
+    //   }
+    // )
   }
 
   handleBookStockFiltersFormSubmit() {
@@ -559,6 +722,16 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
         });
       },
     })
+
+  }
+
+  handleOnClickButtonEditBookCollection(bookCollection: any) {
+    let me = this;
+
+    if (null != bookCollection) {
+      me.bookCollectionEditForm.get('id')?.setValue(bookCollection.id);
+      me.bookCollectionEditForm.get('name')?.setValue(bookCollection.name);
+    }
 
   }
 
