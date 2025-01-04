@@ -20,9 +20,21 @@
   <div class="lib-custom-header-navbar-wrapper">
     <table class="lib-custom-header-navbar">
       <tr>
-        <td (click)="handleExploreClick()" class="lib-custom-header-navbar-button-text">
-          Explore
-        </td>
+        @if (false === authenticationService.isAuthenticated()) {
+
+        } @else {
+          <td (click)="handleExploreClick()" class="lib-custom-header-navbar-button-text">
+            Explore
+          </td>
+        }
+
+        @if (false === authenticationService.isAuthenticated()) {
+
+        } @else {
+          <td (click)="handleProfileClick()" class="lib-custom-header-navbar-button-text">
+            Profile
+          </td>
+        }
 
         @if (false === authenticationService.hasRoleAdmin()) {
 

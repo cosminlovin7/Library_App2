@@ -448,3 +448,8 @@ fieldset {
 .user-details-page-add-book-loan-card-book-loan-container {
 
 }
+
+.user-details-page-profile-data-editable:hover {
+  cursor: pointer;
+
+}

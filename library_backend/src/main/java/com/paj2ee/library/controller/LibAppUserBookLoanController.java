@@ -1,7 +1,6 @@
 package com.paj2ee.library.controller;
 
 import com.paj2ee.library.dto.BookLoanDto;
-import com.paj2ee.library.model.LibAppBook;
 import com.paj2ee.library.model.LibAppBookLoan;
 import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.repository.LibAppBookLoanRepository;
@@ -21,10 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestController
-public class LibAppAdminBookLoanController {
+public class LibAppUserBookLoanController {
 
 	@Autowired
 	private LibAppUserRepository libAppUserRepository;
@@ -37,7 +35,7 @@ public class LibAppAdminBookLoanController {
 	private BookLoanService bookLoanService;
 
 	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-	@GetMapping("/admin/users/{id}/book-loans")
+	@GetMapping("/users/{id}/book-loans")
 	public ResponseEntity<List<BookLoanDto>> getBookLoans(
 		@PathVariable(name = "id") long userId,
 		@RequestParam(name = "loanStatus", required = false) List<LibAppBookLoan.BookLoanStatus> loanStatusLs

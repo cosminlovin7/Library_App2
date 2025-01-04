@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Edit phone number</h1>
+<div mat-dialog-content>
+  <form [formGroup]="phoneNumberForm">
+    <mat-form-field style="width: 100%" appearance="fill">
+      <mat-label>Phone Number</mat-label>
+      <input matInput formControlName="phoneNumber" />
+      <div *ngIf="phoneNumberForm.get('phoneNumber')?.hasError('required')">
+        <span style="color: red">Phone number is required.</span>
+      </div>
+      <div *ngIf="phoneNumberForm.get('phoneNumber')?.hasError('pattern')">
+        <span style="color: red">Phone number must have 8 digits.</span>
+      </div>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onSave()" [disabled]="phoneNumberForm.invalid">Save</button>
+</div>

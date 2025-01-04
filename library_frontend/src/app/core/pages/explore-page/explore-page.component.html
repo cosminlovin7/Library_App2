@@ -1,0 +1,301 @@
+<div class="lib-explore-page-container">
+  <div class="lib-explore-page-book-stock-filter-wrapper">
+    <div class="lib-explore-page-book-stock-filter-options-wrapper">
+      <fieldset class="lib-explore-page-book-stock-filter-options-fieldset">
+        <legend>Filters:</legend>
+        <div class="lib-explore-page-book-stock-filter-options-container">
+          <form
+            class="lib-explore-page-book-stock-form"
+            [formGroup]="bookStockFiltersForm"
+          >
+            <div class="lib-explore-page-book-stock-form-container">
+              <div class="lib-explore-page-book-stock-form-group-wrapper">
+                <div class="lib-explore-page-book-stock-form-group">
+                  <label>Title</label>
+                  <input
+                    class="lib-explore-page-book-stock-form-input"
+                    placeholder="Title"
+                    id="filters_title"
+                    type="text"
+                    formControlName="title"
+                  >
+                </div>
+                <div *ngIf="bookStockFiltersForm.get('title')?.errors">
+                  <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['minlength']">Title must be at least 2 characters.</small>
+                  <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['maxlength']">Title must be of maximum 30 characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-explore-page-book-stock-form-group-wrapper">
+                <div class="lib-explore-page-book-stock-form-group">
+                  <label>Author</label>
+                  <input
+                    class="lib-explore-page-book-stock-form-input"
+                    placeholder="Author"
+                    id="filters_author"
+                    type="text"
+                    formControlName="author"
+                  >
+                </div>
+                <div *ngIf="bookStockFiltersForm.get('author')?.errors">
+                  <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['minlength']">Author must be at least 2 characters.</small>
+                  <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['maxlength']">Author must be of maximum 30 characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-explore-page-book-stock-form-group-wrapper">
+                <div class="lib-explore-page-book-stock-form-group">
+                  <label>Editure</label>
+                  <input
+                    class="lib-explore-page-book-stock-form-input"
+                    placeholder="Editure"
+                    id="filters_editure"
+                    type="text"
+                    formControlName="editure"
+                  >
+                </div>
+                <div *ngIf="bookStockFiltersForm.get('editure')?.errors">
+                  <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['minlength']">Editure must be at least 2 characters.</small>
+                  <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['maxlength']">Editure must be of maximum 30 characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-explore-page-book-stock-form-group-wrapper">
+                <div class="lib-explore-page-book-stock-form-group">
+                  <label>Collection</label>
+                  <select
+                    class="lib-explore-page-book-stock-form-select"
+                    id="book_stock_filters_collection"
+                    formControlName="collection"
+                  >
+                    <option *ngFor="let option of book_stock_select_book_categories_ls" [value]="option.id">
+                      {{ option.name }}
+                    </option>
+                  </select>
+                </div>
+                <!--                      <div *ngIf="bookStockFiltersForm.get('collection')?.errors">-->
+                <!--                        <small *ngIf="bookStockFiltersForm.get('collection')?.errors?.['minlength']">Collection must be at least 2 characters.</small>-->
+                <!--                        <small *ngIf="bookStockFiltersForm.get('collection')?.errors?.['maxlength']">Collection must be of maximum 30 characters.</small>-->
+                <!--                      </div>-->
+              </div>
+
+              <div class="lib-explore-page-book-stock-form-group-wrapper">
+                <div class="lib-explore-page-book-stock-form-group">
+                  <label>Year of Publication</label>
+                  <input
+                    class="lib-explore-page-book-stock-form-input"
+                    placeholder="Year of Publication"
+                    id="filters_yearOfPublication"
+                    type="text"
+                    formControlName="yearOfPublication"
+                  >
+                </div>
+                <div *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors">
+                  <small *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors?.['pattern']">Year of publication must be a number of 4 digits.</small>
+                </div>
+              </div>
+
+              <div>
+                <div class=" lib-explore-page-book-stock-form-group-filter-button">
+                  <button
+                    class="lib-explore-page-book-stock-form-filter-button"
+                    type="submit"
+                    (click)="handleBookStockFiltersFormSubmit()"
+                    [disabled]="!bookStockFiltersForm.valid"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+
+                <div class=" lib-explore-page-book-stock-form-group-filter-button">
+                  <button
+                    class="lib-explore-page-book-stock-form-filter-button"
+                    (click)="handleBookStockFiltersFormReset()"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="lib-explore-page-book-stock-table-wrapper ">
+    <table mat-table [dataSource]="book_stock_dataSource" class="lib-explore-page-book-stock-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef> Quantity </th>
+        <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="availableQuantity">
+        <th mat-header-cell *matHeaderCellDef> Available Quantity </th>
+        <td mat-cell *matCellDef="let element"> {{element.availableQuantity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.author}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="collection">
+        <th mat-header-cell *matHeaderCellDef> Collection </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.collection?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="editure">
+        <th mat-header-cell *matHeaderCellDef> Editure </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.editure}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isbn">
+        <th mat-header-cell *matHeaderCellDef> ISBN </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.isbn}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Title </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.title}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="yearOfPublication">
+        <th mat-header-cell *matHeaderCellDef> Year of Publication </th>
+        <td mat-cell *matCellDef="let element"> {{element.book?.yearOfPublication}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+<!--          <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonEditBookWrapper(element)">Edit</button>-->
+<!--          <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonDeleteBookWrapper(element)">Delete</button>-->
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="book_stock_displayedColumns sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: book_stock_displayedColumns;"
+          (click)="handleOnBookStockRowClick(row)"
+          class="lib-explore-page-book-stock-table-row"
+          [class.active]="row.id == book_stock_selectedBook?.id"
+      ></tr>
+    </table>
+
+    <mat-paginator [length]="book_stock_total" [pageSize]="book_stock_pageSize" [pageSizeOptions]="[1, 5, 10]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements"
+                   (page)="handleBookStockPaginatorChange($event)"
+                   class="lib-explore-page-book-stock-table-paginator"
+    >
+    </mat-paginator>
+  </div>
+  <div *ngIf="null != book_stock_selectedBook" class="lib-explore-page-book-stock-preview-container">
+    <div class="lib-explore-page-book-stock-preview-wrapper">
+      <div class="lib-explore-page-book-stock-preview-title">
+        <span style="font-weight: bold; font-size: 20px">[Book Preview]</span>
+      </div>
+      <div class="lib-explore-page-book-stock-preview">
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Available Quantity:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.availableQuantity }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Title:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.title }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Author:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.author }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Editure:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.editure }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Collection:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.collection?.name }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Edition:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.edition }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">ISBN:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.isbn }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Translator:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.translator }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Page Nr.:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.pageNr }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Book Format:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.bookFormat }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Cover Type:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.coverType }} </span>
+          </div>
+        </div>
+        <div class="lib-explore-page-book-stock-preview-info">
+          <div class="lib-explore-page-book-stock-preview-label">
+            <span style="font-weight: bold">Year of Publication:</span>
+          </div>
+          <div class="lib-explore-page-book-stock-preview-data">
+            <span style=""> {{ book_stock_selectedBook.book?.yearOfPublication }} </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -70,7 +70,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
   book_stock_pageSize = this.DEFAULT_BOOK_STOCK_PAGE_SIZE;
   book_stock_total: number = 0;
   book_stock_ls: BookWrapperInfoDto[] = [];
-  book_stock_displayedColumns: string[] = ['id', 'quantity', 'availableQuantity', 'title', 'author', 'collection', 'editure', 'isbn', 'actions'];
+  book_stock_displayedColumns: string[] = ['id', 'quantity', 'availableQuantity', 'title', 'author', 'collection', 'editure', 'isbn', 'yearOfPublication', 'actions'];
   book_stock_dataSource: MatTableDataSource<BookWrapperInfoDto> = new MatTableDataSource(this.book_stock_ls);
   book_stock_select_book_categories_ls: BookCollectionDto[] = [];
   @ViewChild(MatPaginator) book_stock_paginator!: MatPaginator;
@@ -80,6 +80,11 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     editure: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     collection: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     yearOfPublication: new FormControl('', [Validators.pattern('\\d{4}')])
+  })
+
+  bookStockEditForm = new FormGroup({
+    id: new FormControl('', [Validators.required]),
+    quantity: new FormControl('', [Validators.required, Validators.pattern('\\d+')])
   })
 
   // book_categories_page = this.DEFAULT_BOOK_CATEGORIES_PAGE;
@@ -1321,6 +1326,101 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
           isLoading.set(false);
           me.loading = false;
         },
+      }
+    )
+  }
+
+  handleOnClickButtonEditBookWrapper(bookWrapper: any) {
+    let me = this;
+
+    if (null != bookWrapper) {
+
+      me.bookStockEditForm.get('id')?.setValue(bookWrapper.id);
+
+    }
+  }
+
+  handleOnClickButtonDeleteBookWrapper(bookWrapper: any) {
+    let me = this;
+
+    if (null != bookWrapper) {
+
+      let url = `http://localhost:9922/admin/book-wrappers/${bookWrapper.id}/delete-wrapper`;
+
+      isLoading.set(true);
+      me.loading = true;
+      me.http.delete<void>(url).subscribe(
+        {
+          next() {
+
+            isLoading.set(false);
+            me.loading = false;
+
+            me.snackBar.open("Book stock deleted successfully!", "", {
+              duration: 2000,  // Duration in milliseconds (optional)
+              verticalPosition: "top",
+            });
+
+            me.refreshBookStockData();
+          },
+          error(error) {
+
+            isLoading.set(false);
+            me.loading = false;
+
+            me.snackBar.open("An error occurred while trying to delete the book stock!", "", {
+              duration: 2000,  // Duration in milliseconds (optional)
+              verticalPosition: "top",
+            });
+          }
+        }
+      )
+
+    }
+  }
+
+  handleBookStockEditFormSubmit() {
+    let me = this;
+
+    if (me.bookStockEditForm.invalid) {
+
+      console.warn('Invalid data');
+
+      return;
+
+    }
+
+    const bookStockId = me.bookStockEditForm.get("id")?.getRawValue();
+    const bookStockQuantity = me.bookStockEditForm.get("quantity")?.getRawValue();
+
+    let url = `http://localhost:9922/admin/book-wrappers/${bookStockId}/update-wrapper`;
+
+    isLoading.set(true);
+    me.loading = true;
+    me.http.patch<void>(url, { quantity: bookStockQuantity} ).subscribe(
+      {
+        next() {
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("Book stock updated successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBookStockData();
+        },
+        error(error) {
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to update the book stock!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
       }
     )
   }

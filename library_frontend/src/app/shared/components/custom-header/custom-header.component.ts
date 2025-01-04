@@ -15,8 +15,20 @@ export class CustomHeaderComponent {
   }
 
   handleExploreClick() {
-    //#todo
-    console.log('#todo');
+    let me = this;
+
+    me.router.navigate(['dashboard/explore']);
+  }
+
+  handleProfileClick() {
+    let me = this;
+
+    if (null != me.authenticationService.getUserId()) {
+      //@Force refresh... not best in town
+      me.router.navigate(['/']).then(() => {
+        me.router.navigate(['dashboard/users', me.authenticationService.getUserId()]);
+      })
+    }
   }
 
   handleAllUsersClick() {

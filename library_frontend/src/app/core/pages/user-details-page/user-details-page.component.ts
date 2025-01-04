@@ -25,6 +25,11 @@ import {PageOfBookWrapperInfoDto} from '../../models/page-of-book-wrapper-info-d
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatInput, MatSuffix} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
+import {UsernameDialogComponent} from '../../../shared/components/username-dialog/username-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {EmailDialogComponent} from '../../../shared/components/email-dialog/email-dialog.component';
+import {PhoneNumberDialogComponent} from '../../../shared/components/phone-number-dialog/phone-number-dialog.component';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-user-details-page',
@@ -69,7 +74,15 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
   book_loan_ls: BookLoanDto[] = [];
   book_loan_displayedColumns: string[] = ['id', 'loanStatus', 'loanedOn', 'loanExpireOn', 'returnedOn', 'title', 'author', 'collection', 'isbn', 'loanFineAmount', 'actions'];
   book_loan_dataSource: MatTableDataSource<BookLoanDto> = new MatTableDataSource(this.book_loan_ls);
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {}
+
+  constructor(
+    protected authenticationService: AuthenticationService,
+    private dialog: MatDialog,
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {}
 
   bookLoanLoanStatusFilterForm = new FormGroup({
     opt_LOANED: new FormControl(false, []),
@@ -172,6 +185,10 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
 
     me.userId = me.route.snapshot.paramMap.get('id')!;
 
+    if (me.userId != me.authenticationService.getUserId()?.toString() && ! me.authenticationService.hasRoleAdmin()) {
+      me.router.navigate(['/']);
+    }
+
     if (null != me.userId) {
       let url = `http://localhost:9922/users/${me.userId}`;
 
@@ -257,7 +274,11 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
         case 1:
           let promiseLs = [];
 
-          let url = `http://localhost:9922/admin/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+          let url= `http://localhost:9922/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+
+          if (me.authenticationService.hasRoleAdmin()) {
+            url = `http://localhost:9922/admin/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+          }
 
           let __title = me.bookStockFiltersForm.get("title")?.getRawValue();
           let __author = me.bookStockFiltersForm.get("author")?.getRawValue();
@@ -417,6 +438,30 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  refreshUserInfoData() {
+    let me = this;
+
+    if (null != me.userId) {
+      let url = `http://localhost:9922/users/${me.userId}`;
+
+      isLoading.set(true);
+      me.http.get<UserInfoDto>(url).subscribe(
+        {
+          next(value: UserInfoDto) {
+            me.userInfo = value;
+
+            isLoading.set(false);
+          },
+          error(error) {
+            console.log(error);
+
+            isLoading.set(false);
+          },
+        }
+      )
+    }
+  }
+
   refreshBookLoansData() {
     let me = this;
 
@@ -426,7 +471,7 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
     let _userId = me.userId;
 
     if (null != _userId) {
-      url = `http://localhost:9922/admin/users/${_userId}/book-loans`;
+      url = `http://localhost:9922/users/${_userId}/book-loans`;
 
       __opt_LOANED = me.bookLoanLoanStatusFilterForm.get("opt_LOANED")?.getRawValue();
       __opt_EXPIRED = me.bookLoanLoanStatusFilterForm.get("opt_EXPIRED")?.getRawValue();
@@ -481,7 +526,11 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
     let url = null;
     let __title = null, __author = null, __editure = null, __collection = null, __yearOfPublication = null;
 
-    url = `http://localhost:9922/admin/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+    url = `http://localhost:9922/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+
+    if (me.authenticationService.hasRoleAdmin()) {
+      url = `http://localhost:9922/admin/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+    }
 
     __title = me.bookStockFiltersForm.get("title")?.getRawValue();
     __author = me.bookStockFiltersForm.get("author")?.getRawValue();
@@ -758,6 +807,137 @@ export class UserDetailsPageComponent implements OnInit, AfterViewInit {
 
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    return formattedDateTime;;
+    return formattedDateTime;
+  }
+
+  handleOnClickUserInfoEditUsername() {
+    let me = this;
+
+    const dialogRef = me.dialog.open(UsernameDialogComponent, {
+      width: '400px',
+      data: { username: me.userInfo?.username }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        if (me.userInfo) {
+          let url = `http://localhost:9922/users/${me.userInfo.id}/update-username`
+
+          isLoading.set(true);
+          me.http.patch(url, { username: result }).subscribe({
+            next(value: any) {
+
+              me.snackBar.open("User updated successfully", "Info", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+              me.refreshUserInfoData();
+            },
+            error(error: any) {
+
+              me.snackBar.open("An error occurred while trying to update the user!", "Error", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+            }
+          })
+        }
+
+      }
+    });
+  }
+
+  handleOnClickUserInfoEditEmail() {
+    let me = this;
+
+    const dialogRef = me.dialog.open(EmailDialogComponent, {
+      width: '400px',
+      data: { email: me.userInfo?.email }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        if (me.userInfo) {
+          let url = `http://localhost:9922/users/${me.userInfo.id}/update-email`
+
+          isLoading.set(true);
+          me.http.patch(url, { email: result }).subscribe({
+            next(value: any) {
+
+              me.snackBar.open("User updated successfully", "Info", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+              me.refreshUserInfoData();
+            },
+            error(error: any) {
+
+              me.snackBar.open("An error occurred while trying to update the user!", "Error", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+            }
+          })
+        }
+      }
+    });
+  }
+
+  handleOnClickUserInfoEditPhoneNumber() {
+    let me = this;
+
+    const dialogRef = me.dialog.open(PhoneNumberDialogComponent, {
+      width: '400px',
+      data: { phoneNumber: me.userInfo?.phoneNumber }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        if (me.userInfo) {
+          let url = `http://localhost:9922/users/${me.userInfo.id}/update-phone-number`
+
+          isLoading.set(true);
+          me.http.patch(url, { phoneNumber: result }).subscribe({
+            next(value: any) {
+
+              me.snackBar.open("User updated successfully", "Info", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+              me.refreshUserInfoData();
+            },
+            error(error: any) {
+
+              me.snackBar.open("An error occurred while trying to update the user!", "Error", {
+                duration: 2000,  // Duration in milliseconds (optional)
+                verticalPosition: "top",
+              });
+
+              isLoading.set(false);
+
+            }
+          })
+        }
+
+      }
+    });
   }
 }

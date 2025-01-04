@@ -12,7 +12,7 @@ public class WebMvcAppConfigurer implements WebMvcConfigurer {
 		registry
 			.addMapping("/**")
 			.allowedOrigins("http://localhost:4200")
-			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");;
+			.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");;
 	}
 
 }

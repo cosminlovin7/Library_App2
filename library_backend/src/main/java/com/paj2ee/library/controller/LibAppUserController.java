@@ -1,5 +1,8 @@
 package com.paj2ee.library.controller;
 
+import com.paj2ee.library.cmd.LibAppUpdateUserEmailCmd;
+import com.paj2ee.library.cmd.LibAppUpdateUserPhoneNumberCmd;
+import com.paj2ee.library.cmd.LibAppUpdateUserUsernameCmd;
 import com.paj2ee.library.dto.FileInfoDto;
 import com.paj2ee.library.dto.FileInfoMetaDto;
 import com.paj2ee.library.dto.PageOfUserInfoDto;
@@ -9,6 +12,7 @@ import com.paj2ee.library.model.LibAppUser;
 import com.paj2ee.library.model.LibAppUserAuthority;
 import com.paj2ee.library.repository.LibAppUserRepository;
 import com.paj2ee.library.service.DiskStorageService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -178,4 +184,173 @@ public class LibAppUserController {
 
 		return ResponseEntity.ok(userInfoDto);
 	}
+
+	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+	@PatchMapping("/users/{id}/update-username")
+	public ResponseEntity<UserInfoDto> updateUsername(
+		@PathVariable("id") long id,
+		@RequestBody @Valid LibAppUpdateUserUsernameCmd cmd
+	) {
+
+		LibAppUser libAppUserToUpdate = libAppUserRepository
+			.findById(id)
+			.orElseThrow(() -> new RuntimeException("User not found"));
+
+		libAppUserToUpdate.setUsername(cmd.username());
+
+		LibAppUser libAppUser = libAppUserRepository.save(libAppUserToUpdate);
+
+		Set<LibAppUserAuthority> libAppUserAuthorities = libAppUser.getAuthorities();
+		List<String> authorities = new ArrayList<>();
+
+		for (LibAppUserAuthority libAppUserAuthority : libAppUserAuthorities) {
+			authorities.add(libAppUserAuthority.getAuthority());
+		}
+
+		LibAppFile libAppFile = libAppUser.getIdentityCardFile();
+
+		String base64IdentityPhotoFile = null;
+
+		FileInfoDto fileInfoDto = null;
+		if (null != libAppFile) {
+			base64IdentityPhotoFile = diskStorageServiceImpl.getFileAsBase64(libAppFile.getFilename());
+
+			FileInfoMetaDto fileInfoMetaDto = new FileInfoMetaDto(
+				libAppFile.getFilename(),
+				libAppFile.getType(),
+				libAppFile.getSize()
+			);
+
+			fileInfoDto = new FileInfoDto(
+				libAppFile.getId(),
+				fileInfoMetaDto,
+				base64IdentityPhotoFile
+			);
+		}
+
+		UserInfoDto userInfoDto = new UserInfoDto(
+			libAppUser.getId(),
+			libAppUser.getUsername(),
+			libAppUser.getEmail(),
+			libAppUser.getPhoneNumber(),
+			libAppUser.isEnabled(),
+			authorities,
+			fileInfoDto
+		);
+
+		return ResponseEntity.ok(userInfoDto);
+	}
+
+	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+	@PatchMapping("/users/{id}/update-email")
+	public ResponseEntity<UserInfoDto> updateEmail(
+		@PathVariable("id") long id,
+		@RequestBody @Valid LibAppUpdateUserEmailCmd cmd
+	) {
+
+		LibAppUser libAppUserToUpdate = libAppUserRepository
+			.findById(id)
+			.orElseThrow(() -> new RuntimeException("User not found"));
+
+		libAppUserToUpdate.setEmail(cmd.email());
+
+		LibAppUser libAppUser = libAppUserRepository.save(libAppUserToUpdate);
+
+		Set<LibAppUserAuthority> libAppUserAuthorities = libAppUser.getAuthorities();
+		List<String> authorities = new ArrayList<>();
+
+		for (LibAppUserAuthority libAppUserAuthority : libAppUserAuthorities) {
+			authorities.add(libAppUserAuthority.getAuthority());
+		}
+
+		LibAppFile libAppFile = libAppUser.getIdentityCardFile();
+
+		String base64IdentityPhotoFile = null;
+
+		FileInfoDto fileInfoDto = null;
+		if (null != libAppFile) {
+			base64IdentityPhotoFile = diskStorageServiceImpl.getFileAsBase64(libAppFile.getFilename());
+
+			FileInfoMetaDto fileInfoMetaDto = new FileInfoMetaDto(
+				libAppFile.getFilename(),
+				libAppFile.getType(),
+				libAppFile.getSize()
+			);
+
+			fileInfoDto = new FileInfoDto(
+				libAppFile.getId(),
+				fileInfoMetaDto,
+				base64IdentityPhotoFile
+			);
+		}
+
+		UserInfoDto userInfoDto = new UserInfoDto(
+			libAppUser.getId(),
+			libAppUser.getUsername(),
+			libAppUser.getEmail(),
+			libAppUser.getPhoneNumber(),
+			libAppUser.isEnabled(),
+			authorities,
+			fileInfoDto
+		);
+
+		return ResponseEntity.ok(userInfoDto);
+	}
+
+	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+	@PatchMapping("/users/{id}/update-phone-number")
+	public ResponseEntity<UserInfoDto> updatePhoneNumber(
+		@PathVariable("id") long id,
+		@RequestBody @Valid LibAppUpdateUserPhoneNumberCmd cmd
+	) {
+
+		LibAppUser libAppUserToUpdate = libAppUserRepository
+			.findById(id)
+			.orElseThrow(() -> new RuntimeException("User not found"));
+
+		libAppUserToUpdate.setPhoneNumber(cmd.phoneNumber());
+
+		LibAppUser libAppUser = libAppUserRepository.save(libAppUserToUpdate);
+
+		Set<LibAppUserAuthority> libAppUserAuthorities = libAppUser.getAuthorities();
+		List<String> authorities = new ArrayList<>();
+
+		for (LibAppUserAuthority libAppUserAuthority : libAppUserAuthorities) {
+			authorities.add(libAppUserAuthority.getAuthority());
+		}
+
+		LibAppFile libAppFile = libAppUser.getIdentityCardFile();
+
+		String base64IdentityPhotoFile = null;
+
+		FileInfoDto fileInfoDto = null;
+		if (null != libAppFile) {
+			base64IdentityPhotoFile = diskStorageServiceImpl.getFileAsBase64(libAppFile.getFilename());
+
+			FileInfoMetaDto fileInfoMetaDto = new FileInfoMetaDto(
+				libAppFile.getFilename(),
+				libAppFile.getType(),
+				libAppFile.getSize()
+			);
+
+			fileInfoDto = new FileInfoDto(
+				libAppFile.getId(),
+				fileInfoMetaDto,
+				base64IdentityPhotoFile
+			);
+		}
+
+		UserInfoDto userInfoDto = new UserInfoDto(
+			libAppUser.getId(),
+			libAppUser.getUsername(),
+			libAppUser.getEmail(),
+			libAppUser.getPhoneNumber(),
+			libAppUser.isEnabled(),
+			authorities,
+			fileInfoDto
+		);
+
+		return ResponseEntity.ok(userInfoDto);
+	}
+
 }

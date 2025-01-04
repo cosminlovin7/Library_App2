@@ -8,11 +8,11 @@ public record LibAppUpdateBookWrapperCmd (
 	@NotNull(message = "Invalid quantity. Quantity cannot be null.")
 	@Min(0)
 	@Max(9999)
-	Integer quantity,
+	Integer quantity
 
-	@NotNull(message = "Invalid available quantity. Available quantity cannot be null.")
-	@Min(0)
-	@Max(9999)
-	Integer availableQuantity
+//	@NotNull(message = "Invalid available quantity. Available quantity cannot be null.")
+//	@Min(0)
+//	@Max(9999)
+//	Integer availableQuantity
 ){
 }

@@ -7,6 +7,7 @@ import {authDashboardGuard} from './core/helpers/auth-dashboard.guard';
 import {AllUsersPageComponent} from './core/pages/all-users-page/all-users-page.component';
 import {InventoryPageComponent} from './core/pages/inventory-page/inventory-page.component';
 import {UserDetailsPageComponent} from './core/pages/user-details-page/user-details-page.component';
+import {ExplorePageComponent} from './core/pages/explore-page/explore-page.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full',},
@@ -26,6 +27,10 @@ export const routes: Routes = [
       {
         path: 'inventory',
         component: InventoryPageComponent,
+      },
+      {
+        path: 'explore',
+        component: ExplorePageComponent,
       }
     ]
   },

@@ -31,7 +31,6 @@ public class WebSecurityConfig {
 
                         "/admin/users/{id}/enable",
                         "/admin/users/{id}/disable",
-                        "/admin/users/{id}/book-loans",
 
                         "/admin/books",
                         "/admin/books/{id}",
@@ -62,7 +61,12 @@ public class WebSecurityConfig {
                         "/book-loans/{id}",
                         "/book-loans/create-book-loan",
                         "/book-loans/{id}/update-book-loan",
-                        "/book-loans/{id}/delete-book-loan"
+                        "/book-loans/{id}/delete-book-loan",
+
+                        "/users/{id}/book-loans",
+                        "/users/{id}/update-username",
+                        "/users/{id}/update-email",
+                        "/users/{id}/update-phone-number"
                     ).hasAnyRole("ADMIN", "USER")
                     .anyRequest()
                     .authenticated()

@@ -8,7 +8,7 @@
         </div>
         <div class="user-details-page-profile-info">
           <div class="user-details-page-profile-label">Email</div>
-          <div class="user-details-page-profile-data"> {{ userInfo.email }} </div>
+          <div class="user-details-page-profile-data user-details-page-profile-data-editable" (click)="handleOnClickUserInfoEditEmail()"> {{ userInfo.email }} </div>
         </div>
         <div class="user-details-page-profile-info">
           <div class="user-details-page-profile-label">Enabled</div>
@@ -19,7 +19,7 @@
         </div>
         <div class="user-details-page-profile-info">
           <div class="user-details-page-profile-label">Phone Number</div>
-          <div class="user-details-page-profile-data"> {{ userInfo.phoneNumber }} </div>
+          <div class="user-details-page-profile-data user-details-page-profile-data-editable" (click)="handleOnClickUserInfoEditPhoneNumber()"> {{ userInfo.phoneNumber }} </div>
         </div>
         <div class="user-details-page-profile-info">
           <div class="user-details-page-profile-label">Authorities</div>
@@ -68,6 +68,7 @@
         <span>Book Loans</span>
       </div>
       <div
+        *ngIf="authenticationService.hasRoleAdmin()"
         class="user-details-page-tabs-header"
         [class.active]="activeTabIndex === 1"
         (click)="setActiveTab(1)"
@@ -178,7 +179,7 @@
               <th mat-header-cell *matHeaderCellDef> Actions </th>
               <td mat-cell *matCellDef="let element">
                 <button
-                  *ngIf="'RETURNED' != element.loanStatus" mat-flat-button
+                  *ngIf="'RETURNED' != element.loanStatus && authenticationService.hasRoleAdmin()" mat-flat-button
                   class="user-details-page-button"
                   title="Mark this book as returned"
                   (click)="markBookAsReturned(element)"
@@ -189,7 +190,7 @@
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="book_loan_displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="book_loan_displayedColumns sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: book_loan_displayedColumns;"></tr>
           </table>
         </div>

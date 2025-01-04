@@ -122,23 +122,25 @@
                       </div>
                     </div>
 
-                    <div class="lib-inventory-book-stock-form-group-wrapper lib-inventory-book-stock-form-group-filter-button">
-                      <button
-                        class="lib-inventory-book-stock-form-filter-button"
-                        type="submit"
-                        [disabled]="!bookStockFiltersForm.valid"
-                      >
-                        Apply Filters
-                      </button>
-                    </div>
+                    <div>
+                      <div class="lib-inventory-book-stock-form-group-filter-button">
+                        <button
+                          class="lib-inventory-book-stock-form-filter-button"
+                          type="submit"
+                          [disabled]="!bookStockFiltersForm.valid"
+                        >
+                          Apply Filters
+                        </button>
+                      </div>
 
-                    <div class="lib-inventory-books-form-group-wrapper lib-inventory-books-form-group-filter-button">
-                      <button
-                        class="lib-inventory-books-form-filter-button"
-                        (click)="handleBookStockFiltersFormReset()"
-                      >
-                        Reset Filters
-                      </button>
+                      <div class="lib-inventory-book-stock-form-group-filter-button">
+                        <button
+                          class="lib-inventory-book-stock-form-filter-button"
+                          (click)="handleBookStockFiltersFormReset()"
+                        >
+                          Reset Filters
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -213,16 +215,16 @@
 <!--              <td mat-cell *matCellDef="let element"> {{element.book?.translator}} </td>-->
 <!--            </ng-container>-->
 
-<!--            <ng-container matColumnDef="yearOfPublication">-->
-<!--              <th mat-header-cell *matHeaderCellDef> Year of publication </th>-->
-<!--              <td mat-cell *matCellDef="let element"> {{element.book?.yearOfPublication}} </td>-->
-<!--            </ng-container>-->
+            <ng-container matColumnDef="yearOfPublication">
+              <th mat-header-cell *matHeaderCellDef> Year of publication </th>
+              <td mat-cell *matCellDef="let element"> {{element.book?.yearOfPublication}} </td>
+            </ng-container>
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef> Actions </th>
               <td mat-cell *matCellDef="let element">
-<!--                <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
-<!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+                <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonEditBookWrapper(element)">Edit</button>
+                <button mat-flat-button class="lib-inventory-page-button" (click)="handleOnClickButtonDeleteBookWrapper(element)">Delete</button>
               </td>
             </ng-container>
 
@@ -237,6 +239,57 @@
                          class="lib-inventory-page-table-paginator"
           >
           </mat-paginator>
+        </div>
+        <div class="lib-inventory-page-tab-book-collection-create-wrapper">
+          <div class="lib-inventory-page-tab-book-collection-create-form-container">
+            <div class="lib-inventory-page-tab-book-collection-create-form-title-wrapper">
+              <span class="lib-inventory-page-tab-book-collection-create-form-title">Edit Book Stock</span>
+              <div *ngIf="null != bookStockEditForm.get('id')?.getRawValue() && '' != bookStockEditForm.get('id')?.getRawValue()"
+                   class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg-wrapper"
+              >
+                <span class="lib-inventory-page-tab-book-collection-edit-form-container-edit-msg"> Editing book stock with ID: {{bookStockEditForm.get('id')?.getRawValue()}}</span>
+              </div>
+            </div>
+            <form
+              class="lib-inventory-page-tab-book-collection-create-form"
+              [formGroup]="bookStockEditForm"
+              (ngSubmit)="handleBookStockEditFormSubmit()"
+            >
+              <div class="lib-inventory-page-tab-book-collection-create-form-group-wrapper">
+                <input
+                  class="lib-inventory-page-tab-book-collection-form-input"
+                  placeholder="ID"
+                  id="book_stock_edit_id"
+                  type="hidden"
+                  formControlName="id"
+                >
+                <div class="lib-inventory-page-tab-book-collection-form-group">
+                  <label style="color: white; font-weight: bold">Name</label>
+                  <input
+                    class="lib-inventory-page-tab-book-collection-form-input"
+                    placeholder="Quantity"
+                    id="books_stock_edit_quantity"
+                    type="text"
+                    formControlName="quantity"
+                  >
+                </div>
+                <div style="color: red; font-weight: bold" *ngIf="bookStockEditForm.get('quantity')?.errors">
+                  <small *ngIf="bookStockEditForm.get('quantity')?.touched && bookStockEditForm.get('quantity')?.errors?.['required']">Quantity is required.</small>
+                  <small *ngIf="bookStockEditForm.get('quantity')?.errors?.['pattern']">Quantity must not contain invalid characters.</small>
+                </div>
+              </div>
+
+              <div class="lib-inventory-books-form-group-filter-button">
+                <button
+                  class="lib-inventory-books-form-create-book-collection-button"
+                  type="submit"
+                  [disabled]="!bookStockEditForm.valid"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <div class="lib-inventory-page-mat-tab-body" *ngIf="activeTabIndex == 1">
@@ -464,23 +517,25 @@
                       </div>
                     </div>
 
-                    <div class="lib-inventory-books-form-group-wrapper lib-inventory-books-form-group-filter-button">
-                      <button
-                        class="lib-inventory-books-form-filter-button"
-                        type="submit"
-                        [disabled]="!booksFiltersForm.valid"
-                      >
-                        Apply Filters
-                      </button>
-                    </div>
+                    <div>
+                      <div class="lib-inventory-books-form-group-filter-button">
+                        <button
+                          class="lib-inventory-books-form-filter-button"
+                          type="submit"
+                          [disabled]="!booksFiltersForm.valid"
+                        >
+                          Apply Filters
+                        </button>
+                      </div>
 
-                    <div class="lib-inventory-books-form-group-wrapper lib-inventory-books-form-group-filter-button">
-                      <button
-                        class="lib-inventory-books-form-filter-button"
-                        (click)="handleBooksFiltersFormReset()"
-                      >
-                        Reset Filters
-                      </button>
+                      <div class="lib-inventory-books-form-group-filter-button">
+                        <button
+                          class="lib-inventory-books-form-filter-button"
+                          (click)="handleBooksFiltersFormReset()"
+                        >
+                          Reset Filters
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </form>

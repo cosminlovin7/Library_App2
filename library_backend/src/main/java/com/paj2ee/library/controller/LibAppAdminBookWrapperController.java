@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -175,7 +176,7 @@ public class LibAppAdminBookWrapperController {
 	}
 
 	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
-	@PutMapping("/admin/book-wrappers/{id}/update-wrapper")
+	@PatchMapping("/admin/book-wrappers/{id}/update-wrapper")
 	public ResponseEntity<BookWrapperDto> updateBookWrapper(
 		@PathVariable("id") Long id,
 		@Valid @RequestBody LibAppUpdateBookWrapperCmd cmd
@@ -185,8 +186,15 @@ public class LibAppAdminBookWrapperController {
 			.findById(id)
 			.orElseThrow(() -> new RuntimeException("Book wrapper not found"));
 
+		int nrOfLoanedBooks = libAppBookWrapperToUpdate.getQuantity() - libAppBookWrapperToUpdate.getAvailableQuantity();
+
+		if (nrOfLoanedBooks > cmd.quantity()) {
+			throw new RuntimeException("Cannot update book stock. Number of loaned books is bigger than quantity");
+		}
+
+		int nrOfAvailableBooks = cmd.quantity() - nrOfLoanedBooks;
 		libAppBookWrapperToUpdate.setQuantity(cmd.quantity());
-		libAppBookWrapperToUpdate.setAvailableQuantity(cmd.availableQuantity());
+		libAppBookWrapperToUpdate.setAvailableQuantity(nrOfAvailableBooks);
 
 		LibAppBookWrapper libAppBookWrapper = libAppBookWrapperRepository.save(libAppBookWrapperToUpdate);
 

@@ -91,6 +91,16 @@ export class AuthenticationService {
     return me._userInfo.username;
   }
 
+  getUserId(): number | null {
+    let me = this;
+
+    if (null == me._userInfo) {
+      return null;
+    }
+
+    return me._userInfo.id;
+  }
+
   isEnabled(): boolean {
     let me = this;
     return me._isEnabled;
