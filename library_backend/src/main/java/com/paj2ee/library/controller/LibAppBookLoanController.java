@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -91,10 +93,13 @@ public class LibAppBookLoanController {
 
 		LibAppBookLoan pendingLibAppBookLoan = new LibAppBookLoan();
 
+//		pendingLibAppBookLoan.setLoanedOn(LocalDateTime.now());
+//		pendingLibAppBookLoan.setLoanExpireOn(LocalDateTime.now().plusDays(30));
 		pendingLibAppBookLoan.setLoanedOn(cmd.loanedOn());
 		pendingLibAppBookLoan.setLoanExpireOn(cmd.loanExpireOn());
 		pendingLibAppBookLoan.setReturnedOn(null);
 		pendingLibAppBookLoan.setLoanStatus(LibAppBookLoan.BookLoanStatus.LOANED);
+		pendingLibAppBookLoan.setLoanFineAmount(BigDecimal.valueOf(0.0));
 		pendingLibAppBookLoan.setLoanedBookWrapper(libAppBookWrapper);
 		pendingLibAppBookLoan.setOwnerUser(libAppUser);
 
@@ -119,6 +124,7 @@ public class LibAppBookLoanController {
 
 		LibAppBookWrapper libAppBookWrapper = libAppBookLoanToEnd.getLoanedBookWrapper();
 		libAppBookWrapper.increaseAvailableQuantity();
+		libAppBookLoanToEnd.setReturnedOn(LocalDateTime.now());
 		libAppBookLoanToEnd.setLoanStatus(LibAppBookLoan.BookLoanStatus.RETURNED);
 
 		BookLoanDto out = BookLoanDto.fromEntity(libAppBookLoanToEnd);
@@ -126,40 +132,40 @@ public class LibAppBookLoanController {
 		return ResponseEntity.ok(out);
 	}
 
-	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
-	@PutMapping("/book-loans/{id}/update-book-loan")
-	public ResponseEntity<BookLoanDto> updateBookLoan(
-		@PathVariable("id") long id,
-		@Valid @RequestBody LibAppUpdateBookLoanCmd cmd
-	) {
-
-		LibAppUser libAppUser = libAppUserRepository
-			.findById(cmd.ownerUserId())
-			.orElseThrow(() -> new RuntimeException("User not found"));
-
-		LibAppBookWrapper libAppBookWrapper = libAppBookWrapperRepository
-			.findById(cmd.loanedBookWrapperId())
-			.orElseThrow(() -> new RuntimeException("Book not found"));
-
-		LibAppBookLoan libAppBookLoanToUpdate = libAppBookLoanRepository
-			.findById(id)
-			.orElseThrow(() -> new RuntimeException("Book loan not found"));
-
-		if (libAppBookLoanToUpdate.getLoanStatus() == LibAppBookLoan.BookLoanStatus.RETURNED) {
-			throw new RuntimeException("Book already returned from loan. Cannot update book loan");
-		}
-
-		libAppBookLoanToUpdate.setLoanedOn(cmd.loanedOn());
-		libAppBookLoanToUpdate.setLoanExpireOn(cmd.loanExpireOn());
-		libAppBookLoanToUpdate.setLoanedBookWrapper(libAppBookWrapper);
-		libAppBookLoanToUpdate.setOwnerUser(libAppUser);
-
-		LibAppBookLoan libAppBookLoan = libAppBookLoanRepository.save(libAppBookLoanToUpdate);
-
-		BookLoanDto out = BookLoanDto.fromEntity(libAppBookLoan);
-
-		return ResponseEntity.ok(out);
-	}
+//	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
+//	@PutMapping("/book-loans/{id}/update-book-loan")
+//	public ResponseEntity<BookLoanDto> updateBookLoan(
+//		@PathVariable("id") long id,
+//		@Valid @RequestBody LibAppUpdateBookLoanCmd cmd
+//	) {
+//
+//		LibAppUser libAppUser = libAppUserRepository
+//			.findById(cmd.ownerUserId())
+//			.orElseThrow(() -> new RuntimeException("User not found"));
+//
+//		LibAppBookWrapper libAppBookWrapper = libAppBookWrapperRepository
+//			.findById(cmd.loanedBookWrapperId())
+//			.orElseThrow(() -> new RuntimeException("Book not found"));
+//
+//		LibAppBookLoan libAppBookLoanToUpdate = libAppBookLoanRepository
+//			.findById(id)
+//			.orElseThrow(() -> new RuntimeException("Book loan not found"));
+//
+//		if (libAppBookLoanToUpdate.getLoanStatus() == LibAppBookLoan.BookLoanStatus.RETURNED) {
+//			throw new RuntimeException("Book already returned from loan. Cannot update book loan");
+//		}
+//
+//		libAppBookLoanToUpdate.setLoanedOn(cmd.loanedOn());
+//		libAppBookLoanToUpdate.setLoanExpireOn(cmd.loanExpireOn());
+//		libAppBookLoanToUpdate.setLoanedBookWrapper(libAppBookWrapper);
+//		libAppBookLoanToUpdate.setOwnerUser(libAppUser);
+//
+//		LibAppBookLoan libAppBookLoan = libAppBookLoanRepository.save(libAppBookLoanToUpdate);
+//
+//		BookLoanDto out = BookLoanDto.fromEntity(libAppBookLoan);
+//
+//		return ResponseEntity.ok(out);
+//	}
 
 	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
 	@DeleteMapping("/book-loans/{id}/delete-book-loan")

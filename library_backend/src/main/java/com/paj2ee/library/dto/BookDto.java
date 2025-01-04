@@ -14,7 +14,8 @@ public record BookDto(
 	int pageNr,
 	String bookFormat,
 	LibAppBook.BookCoverType coverType,
-	int yearOfPublication
+	int yearOfPublication,
+	BookWrapperLiteDto bookWrapper
 ) {
 
 	public static BookDto fromEntity(LibAppBook libAppBook) {
@@ -32,7 +33,8 @@ public record BookDto(
 			libAppBook.getPageNr(),
 			libAppBook.getBookFormat(),
 			libAppBook.getCoverType(),
-			libAppBook.getYearOfPublication()
+			libAppBook.getYearOfPublication(),
+			BookWrapperLiteDto.fromEntity(libAppBook.getLibAppBookWrapper())
 		);
 	}
 

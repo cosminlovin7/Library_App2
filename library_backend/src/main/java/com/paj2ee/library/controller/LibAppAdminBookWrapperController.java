@@ -5,6 +5,7 @@ import com.paj2ee.library.cmd.LibAppUpdateBookWrapperCmd;
 import com.paj2ee.library.dto.BookWrapperDto;
 import com.paj2ee.library.dto.PageOfBookWrapperDto;
 import com.paj2ee.library.model.LibAppBook;
+import com.paj2ee.library.model.LibAppBookCollection;
 import com.paj2ee.library.model.LibAppBookWrapper;
 import com.paj2ee.library.repository.LibAppBookRepository;
 import com.paj2ee.library.repository.LibAppBookWrapperRepository;
@@ -49,7 +50,7 @@ public class LibAppAdminBookWrapperController {
 		@RequestParam(name = "title", required = false) String title,
 		@RequestParam(name = "author", required = false) String author,
 		@RequestParam(name = "editure", required = false) String editure,
-		@RequestParam(name = "collection", required = false) String collection,
+		@RequestParam(name = "collection", required = false) Long collectionId,
 		@RequestParam(name = "yearOfPublication", required = false) Integer yearOfPublication
 	) {
 
@@ -64,8 +65,8 @@ public class LibAppAdminBookWrapperController {
 		if (null != editure) {
 			allSpec = allSpec.and(compareWithEditureSpec(editure));
 		}
-		if (null != collection) {
-			allSpec = allSpec.and(compareWithCollectionSpec(collection));
+		if (null != collectionId) {
+			allSpec = allSpec.and(compareWithCollectionSpec(collectionId));
 		}
 		if (null != yearOfPublication) {
 			allSpec = allSpec.and(compareWithYearOfPublicationSpec(yearOfPublication));
@@ -121,11 +122,12 @@ public class LibAppAdminBookWrapperController {
 		};
 	}
 
-	private static Specification<LibAppBookWrapper> compareWithCollectionSpec(String collection) {
+	private static Specification<LibAppBookWrapper> compareWithCollectionSpec(Long collectionId) {
 		return (root, query, builder) -> {
 			Join<LibAppBookWrapper, LibAppBook> child = root.join("ownerLibAppBook");
+			Join<LibAppBook, LibAppBookCollection> bookCollectionChild = child.join("collection");
 
-			return builder.like(child.get("collection"), "%" + collection + "%");
+			return builder.equal(bookCollectionChild.get("id"), collectionId);
 		};
 	}
 
@@ -162,7 +164,7 @@ public class LibAppAdminBookWrapperController {
 		LibAppBookWrapper pendingLibAppBookWrapper = new LibAppBookWrapper();
 		pendingLibAppBookWrapper.setOwnerLibAppBook(libAppBook);
 		pendingLibAppBookWrapper.setQuantity(cmd.quantity());
-		pendingLibAppBookWrapper.setAvailableQuantity(cmd.availableQuantity());
+		pendingLibAppBookWrapper.setAvailableQuantity(cmd.quantity());
 
 		LibAppBookWrapper libAppBookWrapper = libAppBookWrapperRepository.save(pendingLibAppBookWrapper);
 

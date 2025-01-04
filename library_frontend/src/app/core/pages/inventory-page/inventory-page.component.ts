@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import {
   MatCell,
@@ -18,7 +18,7 @@ import {isLoading} from '../../../app.component';
 import {BookInfoDto} from '../../models/book-info-dto';
 import {BookCollectionDto} from '../../models/book-collection-dto';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
-import {MatFormField} from '@angular/material/form-field';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {FormControl, FormGroup, FormGroupDirective, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
 import {PageOfBookCollectionDto} from '../../models/page-of-book-collection-dto';
@@ -43,6 +43,9 @@ import {PageOfBookInfoDto} from '../../models/page-of-book-info-dto';
     MatHeaderRowDef,
     MatRowDef,
     MatButton,
+    NgForOf,
+    MatLabel,
+    MatFormField,
   ],
   templateUrl: './inventory-page.component.html',
   styleUrl: './inventory-page.component.css',
@@ -69,6 +72,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
   book_stock_ls: BookWrapperInfoDto[] = [];
   book_stock_displayedColumns: string[] = ['id', 'quantity', 'availableQuantity', 'title', 'author', 'collection', 'editure', 'isbn', 'actions'];
   book_stock_dataSource: MatTableDataSource<BookWrapperInfoDto> = new MatTableDataSource(this.book_stock_ls);
+  book_stock_select_book_categories_ls: BookCollectionDto[] = [];
   @ViewChild(MatPaginator) book_stock_paginator!: MatPaginator;
   bookStockFiltersForm = new FormGroup({
     title: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
@@ -92,6 +96,8 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
   books_ls: BookInfoDto[] = [];
   books_displayedColumns: string[] = ['id', 'title', 'author', 'collection', 'coverType', 'bookFormat', 'edition', 'editure', 'isbn', 'pageNr', 'translator', 'yearOfPublication', 'actions'];
   books_dataSource: MatTableDataSource<BookInfoDto> = new MatTableDataSource(this.books_ls);
+  books_book_cover_type_ls: BookCoverType[] = BOOK_COVER_TYPES;
+  books_select_book_categories_ls: BookCollectionDto[] = [];
   @ViewChild(MatPaginator) books_paginator!: MatPaginator;
   booksFiltersForm = new FormGroup({
     title: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
@@ -102,31 +108,49 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
   })
 
   bookCollectionCreateForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+    name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
   })
 
   bookCollectionEditForm = new FormGroup({
     id: new FormControl('', [Validators.required]),
-    name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+    name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
   })
 
   bookCreateForm = new FormGroup({
-    title: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')])
+    title: new FormControl('test', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    author: new FormControl('test', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    coverType: new FormControl('BROSATA', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    bookFormat: new FormControl('test', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    edition: new FormControl('1', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    editure: new FormControl('test', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    isbn: new FormControl('594-849-500-828-1', [Validators.required, Validators.minLength(17), Validators.maxLength(17), Validators.pattern('^\\d{3}-\\d{3}-\\d{3}-\\d{3}-\\d{1}$')]),
+    pageNr: new FormControl('234', [Validators.required, Validators.pattern('\\d+')]),
+    translator: new FormControl('test', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    yearOfPublication: new FormControl('2024', [Validators.required, Validators.pattern('\\d{4}')]),
   })
 
   bookEditForm = new FormGroup({
     id: new FormControl('', [Validators.required]),
-    title: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    author: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    collection: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    coverType: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    bookFormat: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    title: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    author: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    coverType: new FormControl('', [Validators.required]),
+    bookFormat: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
     edition: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    editure: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    isbn: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    pageNr: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    translator: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
-    yearOfPublication: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    editure: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    isbn: new FormControl('', [Validators.required, Validators.minLength(17), Validators.maxLength(17), Validators.pattern('^\\d{3}-\\d{3}-\\d{3}-\\d{3}-\\d{1}$')]),
+    pageNr: new FormControl('', [Validators.required, Validators.pattern('\\d+')]),
+    translator: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[^!@#$%^&*{}|<>]+$')]),
+    yearOfPublication: new FormControl('', [Validators.required, Validators.pattern('\\d{4}')]),
+  })
+
+  addBookToBookCollectionForm = new FormGroup({
+    bookId: new FormControl('', [Validators.required]),
+    bookCollectionId: new FormControl('', [Validators.required])
+  })
+
+  bookWrapperCreateForm = new FormGroup({
+    bookId: new FormControl('', [Validators.required]),
+    quantity: new FormControl('', [Validators.required, Validators.pattern('\\d+')]),
   })
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {
@@ -231,40 +255,56 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     }
 
     const title = me.bookCreateForm.get('title')?.getRawValue();
+    const author = me.bookCreateForm.get('author')?.getRawValue();
+    const editure = me.bookCreateForm.get('editure')?.getRawValue();
+    const edition = me.bookCreateForm.get('edition')?.getRawValue();
+    const isbn = me.bookCreateForm.get('isbn')?.getRawValue();
+    const translator = me.bookCreateForm.get('translator')?.getRawValue();
+    const pageNr = me.bookCreateForm.get('pageNr')?.getRawValue();
+    const bookFormat = me.bookCreateForm.get('bookFormat')?.getRawValue();
+    const coverType = me.bookCreateForm.get('coverType')?.getRawValue();
+    const yearOfPublication = me.bookCreateForm.get('yearOfPublication')?.getRawValue();
 
-    console.log('Create book', {
-      title
-    })
+    let url = `http://localhost:9922/admin/books/create-book`;
+    isLoading.set(true);
+    me.loading = true;
+    me.http.post(url, {
+      title,
+      author,
+      editure,
+      edition,
+      isbn,
+      translator,
+      pageNr,
+      bookFormat,
+      coverType,
+      yearOfPublication
+    }).subscribe(
+      {
+        next() {
+          isLoading.set(false);
+          me.loading = false;
 
-    // let url = `http://localhost:9922/admin/book-collections/create-collection`;
-    // isLoading.set(true);
-    // me.loading = true;
-    // me.http.post(url, { name: name }).subscribe(
-    //   {
-    //     next() {
-    //       isLoading.set(false);
-    //       me.loading = false;
-    //
-    //       me.snackBar.open("Book created successfully!", "", {
-    //         duration: 2000,  // Duration in milliseconds (optional)
-    //         verticalPosition: "top",
-    //       });
-    //
-    //       me.refreshBookCollectionData();
-    //     },
-    //     error(error) {
-    //       console.log(error);
-    //
-    //       isLoading.set(false);
-    //       me.loading = false;
-    //
-    //       me.snackBar.open("An error occurred while trying to delete the book!", "Error", {
-    //         duration: 2000,  // Duration in milliseconds (optional)
-    //         verticalPosition: "top",
-    //       });
-    //     }
-    //   }
-    // )
+          me.snackBar.open("Book created successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBooksData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to create the book!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
+      }
+    )
   }
 
   handleBookEditFormSubmit() {
@@ -279,40 +319,189 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
 
     const id = me.bookEditForm.get('id')?.getRawValue();
     const title = me.bookEditForm.get('title')?.getRawValue();
+    const author = me.bookEditForm.get('author')?.getRawValue();
+    const editure = me.bookEditForm.get('editure')?.getRawValue();
+    const edition = me.bookEditForm.get('edition')?.getRawValue();
+    const isbn = me.bookEditForm.get('isbn')?.getRawValue();
+    const translator = me.bookEditForm.get('translator')?.getRawValue();
+    const pageNr = me.bookEditForm.get('pageNr')?.getRawValue();
+    const bookFormat = me.bookEditForm.get('bookFormat')?.getRawValue();
+    const coverType = me.bookEditForm.get('coverType')?.getRawValue();
+    const yearOfPublication = me.bookEditForm.get('yearOfPublication')?.getRawValue();
 
-    console.log('Edit book', {
-      id, title
-    })
+    let url = `http://localhost:9922/admin/books/update-book/${id}`;
+    isLoading.set(true);
+    me.loading = true;
+    me.http.put(url, {
+      id,
+      title,
+      author,
+      editure,
+      edition,
+      isbn,
+      translator,
+      pageNr,
+      bookFormat,
+      coverType,
+      yearOfPublication,
+    }).subscribe(
+      {
+        next() {
+          isLoading.set(false);
+          me.loading = false;
 
-    // let url = `http://localhost:9922/admin/book-collections/update-collection/${id}`;
-    // isLoading.set(true);
-    // me.loading = true;
-    // me.http.put(url, { name: name }).subscribe(
-    //   {
-    //     next() {
-    //       isLoading.set(false);
-    //       me.loading = false;
-    //
-    //       me.snackBar.open("Book updated successfully!", "", {
-    //         duration: 2000,  // Duration in milliseconds (optional)
-    //         verticalPosition: "top",
-    //       });
-    //
-    //       me.refreshBookCollectionData();
-    //     },
-    //     error(error) {
-    //       console.log(error);
-    //
-    //       isLoading.set(false);
-    //       me.loading = false;
-    //
-    //       me.snackBar.open("An error occurred while trying to update the book!", "Error", {
-    //         duration: 2000,  // Duration in milliseconds (optional)
-    //         verticalPosition: "top",
-    //       });
-    //     }
-    //   }
-    // )
+          me.snackBar.open("Book updated successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBooksData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to update the book!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
+      }
+    )
+  }
+
+  handleBookAddBookToBookCollection() {
+    let me = this;
+
+    if (me.addBookToBookCollectionForm.invalid) {
+
+      console.warn('Invalid add book to book collection form');
+
+      return;
+    }
+
+    const bookId = me.addBookToBookCollectionForm.get('bookId')?.getRawValue();
+    const bookCollectionId = me.addBookToBookCollectionForm.get('bookCollectionId')?.getRawValue();
+
+    let url = `http://localhost:9922/admin/books/${bookId}/book-collections/${bookCollectionId}/add`;
+    isLoading.set(true);
+    me.loading = true;
+    me.http.put(url, null).subscribe(
+      {
+        next() {
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("Book updated successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBooksData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to update the book!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
+      }
+    )
+  }
+
+  handleBookWrapperCreateFormSubmit() {
+    let me = this;
+
+    if (me.bookWrapperCreateForm.invalid) {
+
+      console.warn('Invalid add book to book collection form');
+
+      return;
+
+    }
+
+    let bookId = me.bookWrapperCreateForm.get('bookId')?.getRawValue();
+    let quantity = me.bookWrapperCreateForm.get('quantity')?.getRawValue();
+
+    let url = `http://localhost:9922/admin/book-wrappers/create-wrapper`;
+    isLoading.set(true);
+    me.loading = true;
+    me.http.post(url, {
+      ownerLibAppBookId: bookId,
+      quantity: quantity
+    }).subscribe(
+      {
+        next() {
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("Book wrapper created successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBooksData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to create the book wrapper!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        }
+      }
+    )
+  }
+
+  handleOnClickButtonRemoveBookFromBookCollection(book: any) {
+    let me = this;
+
+    if (null != book) {
+
+      const bookId = book.id;
+      const bookCollectionId = book.collection?.id;
+
+      let url = `http://localhost:9922/admin/books/${bookId}/book-collections/${bookCollectionId}/remove`;
+      isLoading.set(true);
+      me.loading = true;
+      me.http.put(url, null).subscribe(
+        {
+          next() {
+            isLoading.set(false);
+            me.loading = false;
+
+            me.snackBar.open("Book removed from book collection successfully!", "", {
+              duration: 2000,  // Duration in milliseconds (optional)
+              verticalPosition: "top",
+            });
+
+            me.refreshBooksData();
+          },
+          error(error) {
+            console.log(error);
+
+            isLoading.set(false);
+            me.loading = false;
+
+            me.snackBar.open("An error occurred while trying to remove the book from the book collection!", "Error", {
+              duration: 2000,  // Duration in milliseconds (optional)
+              verticalPosition: "top",
+            });
+          }
+        }
+      )
+    }
   }
 
   handleBookStockFiltersFormSubmit() {
@@ -341,6 +530,36 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     me.reloadPage();
   }
 
+  handleBookStockFiltersFormReset() {
+    var me = this;
+
+    me.bookStockFiltersForm.get('title')?.setValue('');
+    me.bookStockFiltersForm.get('author')?.setValue('');
+    me.bookStockFiltersForm.get('editure')?.setValue('');
+    me.bookStockFiltersForm.get('collection')?.setValue('');
+    me.bookStockFiltersForm.get('yearOfPublication')?.setValue('');
+  }
+
+  handleBooksFiltersFormReset() {
+    var me = this;
+
+    me.booksFiltersForm.get('title')?.setValue('');
+    me.booksFiltersForm.get('author')?.setValue('');
+    me.booksFiltersForm.get('editure')?.setValue('');
+    me.booksFiltersForm.get('collection')?.setValue('');
+    me.booksFiltersForm.get('yearOfPublication')?.setValue('');
+  }
+
+  handleOnClickCreateBookStockForBook(book: any) {
+    let me = this;
+
+    if (null != book) {
+
+      me.bookWrapperCreateForm.get('bookId')?.setValue(book.id);
+
+    }
+  }
+
   setActiveTab(index: number): void {
     let me = this;
 
@@ -355,8 +574,8 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
 
     me.route.queryParams.subscribe(params => {
 
-      me.loading = true;
-      isLoading.set(true);
+      // me.loading = true;
+      // isLoading.set(true);
 
       let _tabIndex = null != params['tabIndex'] ? parseInt(params['tabIndex']) : me.DEFAULT_TAB_INDEX;
 
@@ -522,92 +741,177 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
       }
 
       if (null != url) {
+        let promiseLs = [];
         switch (_tabIndex) {
           case 0:
-            me.http.get<PageOfBookWrapperInfoDto>(url).subscribe(
-              {
-                next(value: PageOfBookWrapperInfoDto) {
+            promiseLs.push(new Promise<void>((resolve, reject) => {
+              me.http.get<PageOfBookWrapperInfoDto>(url).subscribe(
+                {
+                  next(value: PageOfBookWrapperInfoDto) {
 
-                  console.log(value);
+                    console.log(value);
 
-                  me.book_stock_ls = value.ls;
-                  me.book_stock_total = value.total;
+                    me.book_stock_ls = value.ls;
+                    me.book_stock_total = value.total;
 
-                  me.book_stock_dataSource.data = me.book_stock_ls;
-                  setTimeout(function() {
-                    me.book_stock_paginator.pageIndex = me.book_stock_page;
-                    me.book_stock_paginator.length = me.book_stock_total;
-                  }, 0);
+                    me.book_stock_dataSource.data = me.book_stock_ls;
+                    setTimeout(function () {
+                      me.book_stock_paginator.pageIndex = me.book_stock_page;
+                      me.book_stock_paginator.length = me.book_stock_total;
+                    }, 0);
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-                error(error) {
-                  console.log(error);
+                    // isLoading.set(false);
+                    // me.loading = false;
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-              }
-            )
+                    resolve();
+                  },
+                  error(error) {
+                    console.log(error);
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    reject();
+                  },
+                }
+              )
+            }));
+
+            promiseLs.push(new Promise<void>((resolve, reject) => {
+              me.http.get<BookCollectionDto[]>(`http://localhost:9922/book-collections`).subscribe(
+                {
+                  next(value: BookCollectionDto[]) {
+
+                    me.book_stock_select_book_categories_ls = value;
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    resolve();
+                  },
+                  error(error) {
+                    console.log(error);
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    reject();
+                  },
+                }
+              )
+            }));
             break;
           case 1:
-            me.http.get<BookCollectionDto[]>(url).subscribe(
-              {
-                next(value: BookCollectionDto[]) {
+            promiseLs.push(new Promise<void>((resolve, reject) => {
+              me.http.get<BookCollectionDto[]>(url).subscribe(
+                {
+                  next(value: BookCollectionDto[]) {
 
-                  me.book_categories_ls = value;
-                  // me.book_categories_total = value.total;
+                    me.book_categories_ls = value;
+                    // me.book_categories_total = value.total;
 
-                  me.book_categories_dataSource.data = me.book_categories_ls;
-                  // setTimeout(function() {
-                  //   me.book_categories_paginator.pageIndex = me.book_categories_page;
-                  //   me.book_categories_paginator.length = me.book_categories_total;
-                  // }, 0);
+                    me.book_categories_dataSource.data = me.book_categories_ls;
+                    // setTimeout(function() {
+                    //   me.book_categories_paginator.pageIndex = me.book_categories_page;
+                    //   me.book_categories_paginator.length = me.book_categories_total;
+                    // }, 0);
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-                error(error) {
-                  console.log(error);
+                    // isLoading.set(false);
+                    // me.loading = false;
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-              }
-            )
+                    resolve();
+                  },
+                  error(error) {
+                    console.log(error);
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    reject();
+                  },
+                }
+              )
+            }));
             break;
           case 2:
-            me.http.get<PageOfBookInfoDto>(url).subscribe(
-              {
-                next(value: PageOfBookInfoDto) {
+            promiseLs.push(new Promise<void>((resolve, reject) => {
+              me.http.get<PageOfBookInfoDto>(url).subscribe(
+                {
+                  next(value: PageOfBookInfoDto) {
 
-                  me.books_ls = value.ls;
-                  me.books_total = value.total;
+                    me.books_ls = value.ls;
+                    me.books_total = value.total;
 
-                  me.books_dataSource.data = me.books_ls;
-                  setTimeout(function() {
-                    me.books_paginator.pageIndex = me.books_page;
-                    me.books_paginator.length = me.books_total;
-                  }, 0);
+                    me.books_dataSource.data = me.books_ls;
+                    setTimeout(function() {
+                      me.books_paginator.pageIndex = me.books_page;
+                      me.books_paginator.length = me.books_total;
+                    }, 0);
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-                error(error) {
-                  console.log(error);
+                    // isLoading.set(false);
+                    // me.loading = false;
 
-                  isLoading.set(false);
-                  me.loading = false;
-                },
-              }
-            )
+                    resolve();
+                  },
+                  error(error) {
+                    console.log(error);
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    reject();
+                  },
+                }
+              )
+            }));
+
+            promiseLs.push(new Promise<void>((resolve, reject) => {
+              me.http.get<BookCollectionDto[]>(`http://localhost:9922/book-collections`).subscribe(
+                {
+                  next(value: BookCollectionDto[]) {
+
+                    me.books_select_book_categories_ls = value;
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    resolve();
+                  },
+                  error(error) {
+                    console.log(error);
+
+                    // isLoading.set(false);
+                    // me.loading = false;
+
+                    reject();
+                  },
+                }
+              )
+            }));
             break;
           default:
             console.warn('Unknown tabIndex:', _tabIndex);
             return;
             break;
         }
+
+        isLoading.set(true);
+        me.loading = true;
+        Promise.all(promiseLs).then(
+          () => {
+            console.log('Page loaded successfully');
+
+            isLoading.set(false);
+            me.loading = false;
+          }
+        ).catch(
+          () => {
+            console.log('Error while loading the page');
+
+            isLoading.set(false);
+            me.loading = false;
+          }
+        );
       } else {
         return;
       }
@@ -733,6 +1037,69 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
       me.bookCollectionEditForm.get('name')?.setValue(bookCollection.name);
     }
 
+  }
+
+  handleOnClickButtonDeleteBook(book: any) {
+    let me = this;
+
+    if (null != book) {
+
+      let url = `http://localhost:9922/admin/books/delete-book/${book.id}`;
+
+      isLoading.set(true);
+      me.loading = true;
+      me.http.delete<void>(url).subscribe({
+        next() {
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("Book deleted successfully!", "", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+
+          me.refreshBooksData();
+        },
+        error(error) {
+          console.log(error);
+
+          isLoading.set(false);
+          me.loading = false;
+
+          me.snackBar.open("An error occurred while trying to delete the book!", "Error", {
+            duration: 2000,  // Duration in milliseconds (optional)
+            verticalPosition: "top",
+          });
+        },
+      })
+    }
+  }
+
+  handleOnClickButtonEditBook(book: any) {
+    let me = this;
+
+    if (null != book) {
+      me.bookEditForm.get('id')?.setValue(book.id);
+      me.bookEditForm.get('title')?.setValue(book.title);
+      me.bookEditForm.get('author')?.setValue(book.author);
+      me.bookEditForm.get('editure')?.setValue(book.editure);
+      me.bookEditForm.get('edition')?.setValue(book.edition);
+      me.bookEditForm.get('isbn')?.setValue(book.isbn);
+      me.bookEditForm.get('translator')?.setValue(book.translator);
+      me.bookEditForm.get('pageNr')?.setValue(book.pageNr);
+      me.bookEditForm.get('bookFormat')?.setValue(book.bookFormat);
+      me.bookEditForm.get('coverType')?.setValue(book.coverType);
+      me.bookEditForm.get('yearOfPublication')?.setValue(book.yearOfPublication);
+    }
+
+  }
+
+  handleOnClickButtonAddBookToBookCollection(book: any) {
+    let me = this;
+
+    if (null != book) {
+      me.addBookToBookCollectionForm.get('bookId')?.setValue(book.id);
+    }
   }
 
   reloadPage() {
@@ -906,7 +1273,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     let url = null;
     let __title = null, __author = null, __editure = null, __collection = null, __yearOfPublication = null;
 
-    url = `http://localhost:9922/admin/book-wrappers?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+    url = `http://localhost:9922/admin/books?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
 
     __title = me.bookStockFiltersForm.get("title")?.getRawValue();
     __author = me.bookStockFiltersForm.get("author")?.getRawValue();
@@ -958,3 +1325,23 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     )
   }
 }
+
+export interface BookCoverType {
+  id: number,
+  name: string
+}
+
+const BOOK_COVER_TYPES: BookCoverType[] = [
+  {
+    id: 0,
+    name: 'BROSATA',
+  },
+  {
+    id: 1,
+    name: 'CARTONATA',
+  },
+  {
+    id: 2,
+    name: 'PLASTIC',
+  },
+]

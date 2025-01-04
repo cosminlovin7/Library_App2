@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,6 +36,9 @@ public class LibAppBookLoan {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "book_loan_status", nullable = false, updatable = true)
 	private BookLoanStatus loanStatus;
+
+	@Column(name = "loan_fine_amount", nullable = true, updatable = true, precision = 15, scale = 2)
+	private BigDecimal loanFineAmount;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "loaned_book_wrapper_id", nullable = false, updatable = false)
@@ -80,6 +84,14 @@ public class LibAppBookLoan {
 		this.loanStatus = loanStatus;
 	}
 
+	public BigDecimal getLoanFineAmount() {
+		return loanFineAmount;
+	}
+
+	public void setLoanFineAmount(BigDecimal loanFineAmount) {
+		this.loanFineAmount = loanFineAmount;
+	}
+
 	public LibAppBookWrapper getLoanedBookWrapper() {
 		return loanedBookWrapper;
 	}
@@ -98,6 +110,7 @@ public class LibAppBookLoan {
 
 	public enum BookLoanStatus {
 		LOANED,
-		RETURNED
+		RETURNED,
+		EXPIRED
 	}
 }

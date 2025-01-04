@@ -31,6 +31,7 @@ public class WebSecurityConfig {
 
                         "/admin/users/{id}/enable",
                         "/admin/users/{id}/disable",
+                        "/admin/users/{id}/book-loans",
 
                         "/admin/books",
                         "/admin/books/{id}",

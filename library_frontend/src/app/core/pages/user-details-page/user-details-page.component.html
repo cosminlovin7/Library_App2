@@ -1,0 +1,544 @@
+<div class="user-details-page-container">
+  <div class="user-details-page-profile-container">
+    <div class="user-details-page-profile">
+      <div *ngIf="null != userInfo" class="user-details-page">
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Username</div>
+          <div class="user-details-page-profile-data"> {{ userInfo.username }} </div>
+        </div>
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Email</div>
+          <div class="user-details-page-profile-data"> {{ userInfo.email }} </div>
+        </div>
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Enabled</div>
+          <div class="user-details-page-profile-data">
+            <span *ngIf="userInfo.enabled === true">&#10003;</span> <!-- Checked symbol -->
+            <span *ngIf="userInfo.enabled === false">&#9633;</span>
+          </div>
+        </div>
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Phone Number</div>
+          <div class="user-details-page-profile-data"> {{ userInfo.phoneNumber }} </div>
+        </div>
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Authorities</div>
+          <div class="user-details-page-profile-data">
+            <div class="user-details-page-profile-data-authorities">
+              <span *ngFor="let authority of userInfo.authorities" class="user-details-page-profile-data-authority">
+                {{ authority }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="user-details-page-profile-info">
+          <div class="user-details-page-profile-label">Identity Card Photo</div>
+          <div class="user-details-page-profile-data">
+            <div class="user-details-page-profile-data-authorities">
+              <span *ngIf="null == userInfo.identityPhotoFile">None</span>
+              <div *ngIf="null != userInfo.identityPhotoFile">
+                <img *ngIf="null != userInfo.identityPhotoFile.meta && 'image/jpeg' === userInfo.identityPhotoFile.meta.fileType"
+                     [src]="'data:' + userInfo.identityPhotoFile.meta.fileType + ';base64,' + userInfo.identityPhotoFile.base64FileContent"
+                     width="200px"
+                     height="200px"
+                />
+                <button *ngIf="null != userInfo.identityPhotoFile.meta && 'image/jpeg' !== userInfo.identityPhotoFile.meta.fileType"
+                        mat-flat-button class="user-details-page-button"
+                        (click)="handleOnClickButtonDownloadIdentityPhotoFile(userInfo)"
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="null == userInfo" class="user-details-page">
+        Loading...
+      </div>
+    </div>
+  </div>
+  <div class="user-details-page-tabs-container">
+    <div class="user-details-page-tabs-header-container">
+      <div
+        class="user-details-page-tabs-header"
+        [class.active]="activeTabIndex === 0"
+        (click)="setActiveTab(0)"
+      >
+        <span>Book Loans</span>
+      </div>
+      <div
+        class="user-details-page-tabs-header"
+        [class.active]="activeTabIndex === 1"
+        (click)="setActiveTab(1)"
+      >
+        <span>Add Book Loan</span>
+      </div>
+    </div>
+
+    <div class="user-details-page-tabs-body-container">
+<!--      <div class="user-details-page-tabs-body-toolbar-top-container">-->
+<!--        <button-->
+<!--          mat-flat-button-->
+<!--          class="user-details-page-button"-->
+<!--          title="Mark this book as returned"-->
+<!--          (click)="markBookAsReturned(element)"-->
+<!--        >-->
+<!--          Loan Book-->
+<!--        </button>-->
+<!--      </div>-->
+      <div class="user-details-page-tabs-body" *ngIf="activeTabIndex == 0">
+        <div class="user-details-page-filter-wrapper">
+          <form [formGroup]="bookLoanLoanStatusFilterForm">
+            <div style="padding: 10px">
+              <fieldset class="user-details-page-filter-form-container">
+                <legend>Filters</legend>
+                <fieldset class="user-details-page-filter-form-checkbox-group">
+                  <legend>Label Status</legend>
+                  <div class="user-details-page-filter-form-checkbox">
+                    <label>
+                      <input type="checkbox" formControlName="opt_LOANED"  (change)="handleOnLoanStatusCheckboxChange($event)" />
+                      LOANED
+                    </label>
+                  </div>
+                  <div class="user-details-page-filter-form-checkbox">
+                    <label>
+                      <input type="checkbox" formControlName="opt_EXPIRED" (change)="handleOnLoanStatusCheckboxChange($event)" />
+                      EXPIRED
+                    </label>
+                  </div>
+                  <div class="user-details-page-filter-form-checkbox">
+                    <label>
+                      <input type="checkbox" formControlName="opt_RETURNED" (change)="handleOnLoanStatusCheckboxChange($event)" />
+                      RETURNED
+                    </label>
+                  </div>
+                </fieldset>
+              </fieldset>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="book_loan_ls.length > 0" class="user-details-page-table-wrapper user-details-page-table-book-categories-wrapper">
+          <table mat-table [dataSource]="book_loan_dataSource" class="user-details-page-table">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loanStatus">
+              <th mat-header-cell *matHeaderCellDef> Loan Status </th>
+              <td mat-cell *matCellDef="let element">
+                <span *ngIf="element.loanStatus === 'LOANED'" style="color: #333333; font-weight: bold"> {{element.loanStatus}} </span>
+                <span *ngIf="element.loanStatus === 'EXPIRED'" style="color: red; font-weight: bold"> {{element.loanStatus}} </span>
+                <span *ngIf="element.loanStatus === 'RETURNED'" style="color: green; font-weight: bold"> {{element.loanStatus}} </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loanedOn">
+              <th mat-header-cell *matHeaderCellDef> Loaned On </th>
+              <td mat-cell *matCellDef="let element"> {{null != element.loanedOn ? element.loanedOn : '-' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loanExpireOn">
+              <th mat-header-cell *matHeaderCellDef> Loan Expire On </th>
+              <td mat-cell *matCellDef="let element"> {{null != element.loanExpireOn ? element.loanExpireOn : '-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="returnedOn">
+              <th mat-header-cell *matHeaderCellDef> Returned On </th>
+              <td mat-cell *matCellDef="let element"> {{null != element.returnedOn ? element.returnedOn : '-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let element"> {{element.bookWrapper?.book?.title}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="author">
+              <th mat-header-cell *matHeaderCellDef> Author </th>
+              <td mat-cell *matCellDef="let element"> {{element.bookWrapper?.book?.author}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="collection">
+              <th mat-header-cell *matHeaderCellDef> Collection </th>
+              <td mat-cell *matCellDef="let element"> {{null != element.bookWrapper?.book?.collection?.name ? element.bookWrapper.book.collection.name : '-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="isbn">
+              <th mat-header-cell *matHeaderCellDef> ISBN </th>
+              <td mat-cell *matCellDef="let element"> {{element.bookWrapper?.book?.isbn}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loanFineAmount">
+              <th mat-header-cell *matHeaderCellDef> Fine </th>
+              <td mat-cell *matCellDef="let element"> {{null != element.loanFineAmount ? element.loanFineAmount : 0}}$ </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  *ngIf="'RETURNED' != element.loanStatus" mat-flat-button
+                  class="user-details-page-button"
+                  title="Mark this book as returned"
+                  (click)="markBookAsReturned(element)"
+                >
+                  &#10004;
+                </button>
+                <!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="book_loan_displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: book_loan_displayedColumns;"></tr>
+          </table>
+        </div>
+        <div *ngIf="book_loan_ls.length == 0" style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 32px">
+          No book loans.
+        </div>
+      </div>
+      <div class="user-details-page-tabs-body" *ngIf="activeTabIndex == 1">
+        <div class="user-details-page-add-book-loan-card">
+          <div class="user-details-page-add-book-loan-card-header">
+            <div
+              class="user-details-page-add-book-loan-card-header-tab"
+              [class.active]="addBookLoan_currStep === 0"
+            >
+              <span> Step: 1 </span>
+            </div>
+            <div
+              class="user-details-page-add-book-loan-card-header-tab"
+              [class.active]="addBookLoan_currStep === 1"
+            >
+              <span> Step: 2 </span>
+            </div>
+            <div
+              class="user-details-page-add-book-loan-card-header-tab"
+              [class.active]="addBookLoan_currStep === 2"
+            >
+              <span> Step: 3 </span>
+            </div>
+          </div>
+          <div class="user-details-page-add-book-loan-card-body-container">
+            <div class="user-details-page-add-book-loan-card-body" *ngIf="addBookLoan_currStep === 0">
+              <div class="user-details-page-add-book-loan-card-info">
+                <span style="color: white; font-weight: bold;">
+                  [Description]:
+                </span>
+                <span style="color: white;">
+                  Select a book in order to continue!
+                </span>
+              </div>
+              <div style="background-color: white; height: 110px" class="user-details-page-filter-wrapper">
+                <div class="user-details-page-filter-options-wrapper">
+                  <fieldset class="user-details-page-options-fieldset">
+                    <legend>Filters:</legend>
+                    <div class="user-details-page-filter-options-container">
+                      <form
+                        class="user-details-book-stock-form"
+                        [formGroup]="bookStockFiltersForm"
+                      >
+                        <div class="user-details-book-stock-form-container">
+                          <div class="user-details-book-stock-form-group-wrapper">
+                            <div class="user-details-book-stock-form-group">
+                              <label>Title</label>
+                              <input
+                                class="user-details-book-stock-form-input"
+                                placeholder="Title"
+                                id="filters_title"
+                                type="text"
+                                formControlName="title"
+                              >
+                            </div>
+                            <div *ngIf="bookStockFiltersForm.get('title')?.errors">
+                              <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['minlength']">Title must be at least 2 characters.</small>
+                              <small *ngIf="bookStockFiltersForm.get('title')?.errors?.['maxlength']">Title must be of maximum 30 characters.</small>
+                            </div>
+                          </div>
+
+                          <div class="user-details-book-stock-form-group-wrapper">
+                            <div class="user-details-book-stock-form-group">
+                              <label>Author</label>
+                              <input
+                                class="user-details-book-stock-form-input"
+                                placeholder="Author"
+                                id="filters_author"
+                                type="text"
+                                formControlName="author"
+                              >
+                            </div>
+                            <div *ngIf="bookStockFiltersForm.get('author')?.errors">
+                              <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['minlength']">Author must be at least 2 characters.</small>
+                              <small *ngIf="bookStockFiltersForm.get('author')?.errors?.['maxlength']">Author must be of maximum 30 characters.</small>
+                            </div>
+                          </div>
+
+                          <div class="user-details-book-stock-form-group-wrapper">
+                            <div class="user-details-book-stock-form-group">
+                              <label>Editure</label>
+                              <input
+                                class="user-details-book-stock-form-input"
+                                placeholder="Editure"
+                                id="filters_editure"
+                                type="text"
+                                formControlName="editure"
+                              >
+                            </div>
+                            <div *ngIf="bookStockFiltersForm.get('editure')?.errors">
+                              <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['minlength']">Editure must be at least 2 characters.</small>
+                              <small *ngIf="bookStockFiltersForm.get('editure')?.errors?.['maxlength']">Editure must be of maximum 30 characters.</small>
+                            </div>
+                          </div>
+
+                          <div class="user-details-book-stock-form-group-wrapper">
+                            <div class="user-details-book-stock-form-group">
+                              <label>Collection</label>
+                              <select
+                                class="user-details-book-stock-form-select"
+                                id="book_stock_filters_collection"
+                                formControlName="collection"
+                              >
+                                <option *ngFor="let option of book_stock_select_book_categories_ls" [value]="option.id">
+                                  {{ option.name }}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="user-details-book-stock-form-group-wrapper">
+                            <div class="user-details-book-stock-form-group">
+                              <label>Year of Publication</label>
+                              <input
+                                class="user-details-book-stock-form-input"
+                                placeholder="Year of Publication"
+                                id="filters_yearOfPublication"
+                                type="text"
+                                formControlName="yearOfPublication"
+                              >
+                            </div>
+                            <div *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors">
+                              <small *ngIf="bookStockFiltersForm.get('yearOfPublication')?.errors?.['pattern']">Year of publication must be a number of 4 digits.</small>
+                            </div>
+                          </div>
+
+                          <div class="user-details-books-form-group-filter-button-wrapper">
+                            <div class="user-details-books-form-group-filter-button">
+                              <button
+                                class="user-details-books-form-filter-button"
+                                [disabled]="!bookStockFiltersForm.valid"
+                                (click)="handleBookStockFiltersFormSubmit()"
+                              >
+                                Apply Filters
+                              </button>
+                            </div>
+
+                            <div class="user-details-books-form-group-filter-button">
+                              <button
+                                class="user-details-books-form-filter-button"
+                                (click)="handleBookStockFiltersFormReset()"
+                              >
+                                Reset Filters
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="user-details-page-table-wrapper user-details-page-table-add-book-loan-book-stock-wrapper">
+                <table
+                  mat-table
+                  [dataSource]="book_stock_dataSource" class="user-details-page-table"
+                  style="height: 355px"
+                >
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                    <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="availableQuantity">
+                    <th mat-header-cell *matHeaderCellDef> Available Quantity </th>
+                    <td mat-cell *matCellDef="let element"> {{element.availableQuantity}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="author">
+                    <th mat-header-cell *matHeaderCellDef> Author </th>
+                    <td mat-cell *matCellDef="let element"> {{element.book?.author}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="collection">
+                    <th mat-header-cell *matHeaderCellDef> Collection </th>
+                    <td mat-cell *matCellDef="let element"> {{element.book?.collection?.name}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="editure">
+                    <th mat-header-cell *matHeaderCellDef> Editure </th>
+                    <td mat-cell *matCellDef="let element"> {{element.book?.editure}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="isbn">
+                    <th mat-header-cell *matHeaderCellDef> ISBN </th>
+                    <td mat-cell *matCellDef="let element"> {{element.book?.isbn}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef> Title </th>
+                    <td mat-cell *matCellDef="let element"> {{element.book?.title}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let element">
+                      <!--                <button *ngIf="null != element.identityPhotoFile" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonDownloadIdentityPhotoFile(element)">Download Identity Photo</button>-->
+                      <!--                <button *ngIf="! element.enabled" mat-flat-button class="lib-all-users-page-button" (click)="handleOnClickButtonEnableUser(element)">Enable</button>-->
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="book_stock_displayedColumns sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: book_stock_displayedColumns;"
+                      (click)="handleStep1OnBookStockRowClick(row)"
+                      class="user-details-page-table-row"
+                      [class.active]="row.id == addBookLoan_step1SelectedRow?.id"
+                  ></tr>
+                </table>
+
+                <mat-paginator [length]="book_stock_total" [pageSize]="book_stock_pageSize" [pageSizeOptions]="[1, 5, 10]"
+                               showFirstLastButtons
+                               aria-label="Select page of periodic elements"
+                               (page)="handleBookStockPaginatorChange($event)"
+                               style="height: 55px"
+                               class="user-details-page-table-paginator"
+                >
+                </mat-paginator>
+              </div>
+            </div>
+            <div class="user-details-page-add-book-loan-card-body" *ngIf="addBookLoan_currStep === 1">
+              <div class="user-details-page-add-book-loan-card-info">
+                <span style="color: white; font-weight: bold;">
+                  [Description]:
+                </span>
+                <span style="color: white;">
+                  Insert information about the loan expiration date for the book!
+                </span>
+              </div>
+              <div class="user-details-page-add-book-loan-card-form">
+                <form
+                  class="user-details-book-stock-form"
+                  [formGroup]="addBookLoan_step2LoanInfoForm"
+                >
+                  <div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center">
+                    <div style="width: 80%; display: flex; flex-direction: row; justify-content: center; align-items: center">
+                      <label style="color:white; font-weight: bold; width: 200px">Loaned on:</label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker1"
+                        class="user-details-book-stock-form-input"
+                        formControlName="loanedOn"
+                      >
+                      <mat-datepicker-toggle matIconSuffix [for]="picker1" disabled>
+    <!--                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>-->
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </div>
+
+                    <div style="width: 80%; display: flex; flex-direction: row; justify-content: center; align-items: center">
+                      <label style="color:white; font-weight: bold; width: 200px">Loan expire on:</label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker2"
+                        class="user-details-book-stock-form-input"
+                        formControlName="loanExpireOn"
+                      >
+                      <mat-datepicker-toggle matIconSuffix [for]="picker2">
+                        <!--                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>-->
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="user-details-page-add-book-loan-card-body" *ngIf="addBookLoan_currStep === 2">
+              <div class="user-details-page-add-book-loan-card-info">
+                <span style="color: white; font-weight: bold;">
+                  [Description]:
+                </span>
+                <span style="color: white;">
+                  Here you can preview the information about the book loan. If everything is ok, click 'Submit'!
+                </span>
+              </div>
+              <div class="user-details-page-add-book-loan-card-book-loan-preview">
+                <div style="margin-bottom: 20px;">
+                  <span style="font-weight: bold; font-size: 20px; color: white">[Loan Preview]</span>
+                </div>
+                <div class="user-details-page-add-book-loan-card-book-loan-container">
+                  <div style="display: flex; flex-direction: row">
+                    <div style="width: 150px;">
+                      <span style="font-weight: bold; color: white;">Username:</span>
+                    </div>
+                    <div>
+                      <span style="color: white;">{{ null != userInfo ? userInfo.username : 'None' }}</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: row">
+                    <div style="width:150px;">
+                      <span style="font-weight: bold; color: white;">Book:</span>
+                    </div>
+                    <div>
+                      <span style="color: white;">{{ null != addBookLoan_step1SelectedRow ? addBookLoan_step1SelectedRow?.book?.title + 'by' + addBookLoan_step1SelectedRow?.book?.author : 'None' }}</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: row">
+                    <div style="width:150px;">
+                      <span style="font-weight: bold; color: white;">Loaned On:</span>
+                    </div>
+                    <div>
+                      <span style="color: white;"> {{ null != addBookLoan_step2LoanInfoForm.get('loanedOn')?.getRawValue() ? convertDateToDateTimeFormat(addBookLoan_step2LoanInfoForm.get('loanedOn')?.getRawValue()) : 'None' }}</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: row">
+                    <div style="width:150px;">
+                      <span style="font-weight: bold; color: white;">Loan Expire On:</span>
+                    </div>
+                    <div>
+                      <span style="color: white;">{{ null != addBookLoan_step2LoanInfoForm.get('loanExpireOn')?.getRawValue() ? convertDateToDateTimeFormat(addBookLoan_step2LoanInfoForm.get('loanExpireOn')?.getRawValue()) : 'None' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="user-details-page-add-book-loan-card-footer">
+            <button
+              *ngIf="addBookLoan_currStep === 2"
+              class="user-details-add-book-loan-footer-button"
+              (click)="handleOnClickAddBookLoanFooterButtonSubmit()"
+            >
+              Submit
+            </button>
+            <button
+              *ngIf="addBookLoan_currStep !== 2"
+              class="user-details-add-book-loan-footer-button"
+              (click)="handleOnClickAddBookLoanFooterButtonNext()"
+            >
+              Next >
+            </button>
+            <button
+              *ngIf="addBookLoan_currStep !== 0"
+              class="user-details-add-book-loan-footer-button"
+              (click)="handleOnClickAddBookLoanFooterButtonPrev()"
+            >
+              Prev <
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

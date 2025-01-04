@@ -29,6 +29,11 @@ public class BookLoanServiceImpl implements BookLoanService {
 		LocalDateTime now = LocalDateTime.now();
 		int daysPenalty = 0;
 		for (LibAppBookLoan libAppBookLoan : libAppBookLoanLs) {
+
+			if (libAppBookLoan.getLoanStatus() == LibAppBookLoan.BookLoanStatus.RETURNED) {
+				continue;
+			}
+
 			LocalDateTime loanExpireOn = libAppBookLoan.getLoanExpireOn();
 
 			if (loanExpireOn.isBefore(now)) {
@@ -55,6 +60,11 @@ public class BookLoanServiceImpl implements BookLoanService {
 		LocalDateTime now = LocalDateTime.now();
 		int daysPenalty = 0;
 		for (LibAppBookLoan libAppBookLoan : libAppBookLoanLs) {
+
+			if (libAppBookLoan.getLoanStatus() == LibAppBookLoan.BookLoanStatus.RETURNED) {
+				continue;
+			}
+
 			LocalDateTime loanExpireOn = libAppBookLoan.getLoanExpireOn();
 
 			if (loanExpireOn.isBefore(now)) {

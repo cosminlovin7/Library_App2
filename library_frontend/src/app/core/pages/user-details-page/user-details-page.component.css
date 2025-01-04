@@ -1,0 +1,450 @@
+:host {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+th {
+  background-color: #03122F; /* Light background for headers */
+  font-weight: bold; /* Make header text bold */
+  color: white;
+}
+
+tr:nth-child(odd) {
+  background-color: #FFFFFF;  /* Light gray for odd rows */
+}
+
+/* Apply background color to even rows */
+tr:nth-child(even) {
+  background-color: #F1916D;
+}
+
+legend {
+  font-weight: bold;
+}
+
+fieldset {
+  box-sizing: border-box;
+
+  margin: 0;
+
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.user-details-page-container {
+  flex: 1;
+
+  overflow: auto; /* Adds scrollbar if content overflows */
+  display: flex; /* Optional: Set display to flex if needed */
+  flex-direction: row; /* Ensure child divs stack vertically */
+}
+
+.user-details-page-profile-container {
+  background-color: #F3DADF;
+
+  width: 500px;
+}
+
+.user-details-page-profile {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  font-size: 18px;
+}
+
+.user-details-page-profile-info {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  margin-bottom: 10px;
+}
+
+.user-details-page-profile-label {
+  width: 200px;
+
+  font-weight: bold;
+}
+
+.user-details-page-profile-data {
+  flex: 1;
+}
+
+.user-details-page-profile-data-authorities {
+  display: flex;
+}
+
+.user-details-page-profile-data-authority {
+  border-radius: 20px;
+  border-width: 0px;
+  text-align: center;
+  color: white;
+  background: #413B61;
+  border-color: #413B61;
+
+  padding: 10px;
+}
+
+.user-details-page-tabs-container {
+  flex: 1;
+}
+
+.user-details-page-tabs-header-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-details-page-tabs-header {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 40px;
+}
+
+.user-details-page-tabs-header:hover {
+  background: #AE7DAC;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.user-details-page-tabs-header.active {
+  background: #19305C;
+
+  color: white;
+  font-weight: bold;
+
+  transition: background 0.3s ease;
+}
+
+.user-details-page-tabs-body-container {
+
+}
+
+.user-details-page-tabs-body-toolbar-top-container {
+  height: 40px;
+
+  background-color: white;
+}
+
+.user-details-page-button {
+  color: white !important;
+  background-color: #413B61 !important;
+}
+
+.user-details-page-button:hover {
+  background-color: #AE7DAC !important;
+}
+
+
+.user-details-page-table-wrapper {
+  width: auto;
+  box-sizing: border-box;
+
+  border: 1px solid lightgray;
+}
+
+.user-details-page-table-add-book-loan-book-stock-wrapper {
+  max-height: 410px;
+
+  overflow: auto;
+
+  border: none;
+}
+
+.user-details-page-table-book-categories-wrapper {
+  max-height: 400px;
+
+  overflow: auto;
+}
+
+.user-details-page-table {
+  width: 100%;
+  /*height: 1500px;*/
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  /*border-color: black;*/
+
+  color: black;
+}
+
+.user-details-page-table .mat-mdc-header-row {
+  background-color: #03122F;
+
+  color: white;
+}
+
+.user-details-page-table .mat-mdc-header-row th {
+  color: white;
+}
+
+.user-details-page-table .mat-mdc-row {
+  color: black;
+}
+
+.user-details-page-table-paginator {
+  background-color: #03122F;
+}
+
+.user-details-page-filter-wrapper {
+  /*background-color: #03122F;*/
+  /*color: white;*/
+}
+
+.user-details-page-filter-form-container {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+
+  padding: 10px;
+}
+
+.user-details-page-filter-form-checkbox-group {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+}
+
+.user-details-page-filter-form-checkbox {
+  margin-right: 10px;
+}
+
+
+.user-details-page-add-book-loan-card {
+  height: 700px;
+
+  background-color: #413B61;
+
+  position: relative;
+}
+
+.user-details-page-add-book-loan-card-info {
+  height: 80px;
+  padding: 10px;
+}
+
+.user-details-page-add-book-loan-card-header {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+
+  color: white;
+}
+
+.user-details-page-add-book-loan-card-header-tab {
+  flex: 1;
+
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #413B61;
+}
+
+/*.user-details-page-add-book-loan-card-header-tab:hover {*/
+/*  background: #AE7DAC;*/
+/*  cursor: pointer;*/
+/*  transition: background 0.3s ease;*/
+/*}*/
+
+.user-details-page-add-book-loan-card-footer {
+  position: absolute;
+
+  bottom: 0;
+
+  background: #AE7DAC;
+  height: 40px;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: row-reverse;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-details-page-add-book-loan-card-header-tab.active {
+  font-weight: bold;
+  background: #19305C;
+}
+
+.user-details-page-filter-options-wrapper {
+  padding: 10px;
+}
+
+.user-details-page-options-fieldset {
+
+}
+
+.user-details-page-filter-options-container {
+  display: flex;
+}
+
+.user-details-book-stock-form {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-details-book-stock-form-container {
+  display: flex;
+
+  flex-direction: row;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.user-details-book-stock-form-group-wrapper {
+  /*margin-bottom: 30px;*/
+
+  margin-right: 30px;
+
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-details-book-stock-form-group {
+  display: table;
+  width: 100%;
+}
+
+.user-details-book-stock-form-input, .user-details-book-stock-form-select {
+  display: table-cell;
+
+  width: 100%;
+  height: 35px;
+  border-style: solid;
+  box-sizing: border-box; /* Include padding in width calculation */
+  padding: 5px; /* Add padding around the label */
+  border-width: 1px;
+  border-radius: 5px;
+}
+
+.user-details-book-stock-form-input:focus {
+  outline: #413B61 solid 1px;
+}
+
+.user-details-book-stock-form-select {
+  background-color: white;
+}
+
+.user-details-books-form-group-wrapper {
+  margin-bottom: 30px;
+
+  margin-right: 30px;
+
+  flex: 1;
+}
+
+.user-details-books-form-group-filter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-details-books-form-filter-button {
+  width: 60%;
+  height: 35px;
+  border-radius: 20px;
+  border-width: 0px;
+  text-align: center;
+  color: white;
+  background: #413B61;
+  border-color: #413B61;
+  transition: background 0.3s ease;
+}
+
+.user-details-books-form-filter-button:disabled {
+  background: #CCCCCC;
+}
+
+.user-details-books-form-filter-button:hover:enabled {
+  background: #F1916D;
+  border-color: #F1916D;
+  color: #000000;
+  cursor: pointer;
+}
+
+.user-details-page-table-row:hover {
+  background: #19305C;
+  color: white !important;
+  cursor: pointer;
+}
+
+.user-details-page-table-row.active {
+  background: #19305C;
+  color: white !important;
+}
+
+.user-details-add-book-loan-footer-button {
+  margin-right: 20px;
+  margin-left: 20px;
+
+  width: 80px;
+  height: 30px;
+  border-radius: 20px;
+  border-width: 0px;
+  text-align: center;
+  color: white;
+  background: #413B61;
+  border-color: #F1916D;
+  transition: background 0.3s ease;
+}
+
+.user-details-add-book-loan-footer-button:disabled {
+  background: #CCCCCC;
+}
+
+.user-details-add-book-loan-footer-button:hover:enabled {
+  background: #F1916D;
+  border-color: #F1916D;
+  color: #000000;
+  cursor: pointer;
+}
+
+.user-details-page-add-book-loan-card-body-container {
+}
+
+.user-details-page-add-book-loan-card-body {
+  height: 520px;
+}
+
+.user-details-books-form-group-filter-button-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.user-details-page-add-book-loan-card-book-loan-preview {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+}
+
+.user-details-page-add-book-loan-card-book-loan-container {
+
+}

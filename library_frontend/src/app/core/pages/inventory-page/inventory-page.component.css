@@ -92,14 +92,16 @@ tr:nth-child(even) {
 }
 
 .lib-inventory-page-table-wrapper {
-  width: 100%;
+  width: auto;
   box-sizing: border-box;
 
-  padding: 0 10px 10px;
+  margin: 0 10px 10px;
+
+  border: 1px solid lightgray;
 }
 
 .lib-inventory-page-table-book-categories-wrapper {
-  height: 400px;
+  max-height: 400px;
 
   overflow: auto;
 }
@@ -175,7 +177,7 @@ tr:nth-child(even) {
   width: 100%;
 }
 
-.lib-inventory-book-stock-form-input {
+.lib-inventory-book-stock-form-input, .lib-inventory-book-stock-form-select {
   display: table-cell;
 
   width: 100%;
@@ -189,6 +191,10 @@ tr:nth-child(even) {
 
 .lib-inventory-book-stock-form-input:focus {
   outline: #413B61 solid 1px;
+}
+
+.lib-inventory-book-stock-form-select {
+  background-color: white;
 }
 
 .lib-inventory-book-stock-form-group-filter-button {
@@ -246,7 +252,7 @@ tr:nth-child(even) {
   width: 100%;
 }
 
-.lib-inventory-books-form-input {
+.lib-inventory-books-form-input, .lib-inventory-books-form-select {
   display: table-cell;
 
   width: 100%;
@@ -260,6 +266,10 @@ tr:nth-child(even) {
 
 .lib-inventory-books-form-input:focus {
   outline: #413B61 solid 1px;
+}
+
+.lib-inventory-books-form-select {
+  background-color: white;
 }
 
 .lib-inventory-books-form-group-filter-button {
@@ -352,6 +362,8 @@ tr:nth-child(even) {
 
 .lib-inventory-page-tab-book-collection-create-form-group-wrapper {
   margin-bottom: 30px;
+
+  flex: 1;
 }
 
 .lib-inventory-page-tab-book-collection-form-group {
@@ -359,7 +371,7 @@ tr:nth-child(even) {
   width: 100%;
 }
 
-.lib-inventory-page-tab-book-collection-form-input {
+.lib-inventory-page-tab-book-collection-form-input, .lib-inventory-page-tab-book-collection-form-select {
   display: table-cell;
 
   width: 100%;
@@ -373,6 +385,10 @@ tr:nth-child(even) {
 
 .lib-inventory-page-tab-book-collection-form-input:focus {
   outline: #F3DADF solid 1px;
+}
+
+.lib-inventory-page-tab-book-collection-form-select {
+  background-color: white;
 }
 
 .lib-inventory-books-form-create-book-collection-button {
@@ -401,4 +417,12 @@ tr:nth-child(even) {
 .lib-inventory-page-tab-book-collection-edit-form-container-edit-msg {
   font-style: italic;
   color: #F1916D ;
+}
+
+.lib-inventory-page-tab-book-collection-create-form-group-container {
+  margin-top: 30px;
+
+  display: flex;
+
+  flex-direction: column;
 }

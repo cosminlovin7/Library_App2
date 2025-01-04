@@ -104,7 +104,6 @@ export class AllUsersPageComponent implements OnInit, AfterViewInit {
         }
       }
     }
-
   }
 
   handleOnClickButtonEnableUser(element: any) {
@@ -135,6 +134,14 @@ export class AllUsersPageComponent implements OnInit, AfterViewInit {
           },
         }
       )
+    }
+  }
+
+  handleOnClickButtonViewUserInfo(userInfo: any) {
+    let me = this;
+
+    if (null != userInfo) {
+      me.router.navigate(['dashboard', 'users', userInfo.id]);
     }
   }
 

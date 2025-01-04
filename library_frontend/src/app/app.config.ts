@@ -12,6 +12,7 @@ import {basicAuthInterceptor} from './core/helpers/basic-auth.interceptor';
 import {Observable} from 'rxjs';
 import {UserInfoDto} from './core/models/user-info-dto';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {provideNativeDateAdapter} from '@angular/material/core';
 
 const initializerFn = (): Observable<unknown> | Promise<unknown> | void => {
   const http = inject(HttpClient);
@@ -116,6 +117,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([basicAuthInterceptor]),
     ),
     //@NOTE: https://angular.dev/api/core/provideAppInitializer
-    provideAppInitializer(initializerFn), provideAnimationsAsync(), provideAnimationsAsync()
+    provideAppInitializer(initializerFn), provideAnimationsAsync(), provideAnimationsAsync(),
+    provideNativeDateAdapter()
   ]
 };

@@ -4,6 +4,7 @@ import com.paj2ee.library.model.LibAppBook;
 import com.paj2ee.library.model.LibAppBookLoan;
 import com.paj2ee.library.model.LibAppBookWrapper;
 import com.paj2ee.library.model.LibAppUser;
+import com.paj2ee.library.repository.LibAppBookLoanRepository;
 import com.paj2ee.library.repository.LibAppUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -27,9 +29,12 @@ public class BookLoanExpiringTermScheduler {
 	private LibAppUserRepository libAppUserRepository;
 	@Autowired
 	private EmailSenderService emailSenderService;
+	@Autowired
+	private LibAppBookLoanRepository libAppBookLoanRepository;
 
-	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+	@Transactional(readOnly = false, isolation = Isolation.REPEATABLE_READ)
 	@Scheduled(cron = "0 0 8 * * ?")//@NOTE: Run daily at 08:00 AM
+//	@Scheduled(fixedDelay = 30000)
 	public void runBookLoanExpiringTermCheck() {
 
 		logger.info("Book loan expiring term check started...");
@@ -47,6 +52,11 @@ public class BookLoanExpiringTermScheduler {
 			boolean alertsNeeded = false;
 			for (LibAppBookLoan libAppBookLoan : libAppBookLoanLs) {
 
+				if (libAppBookLoan.getLoanStatus() == LibAppBookLoan.BookLoanStatus.RETURNED) {
+					continue;
+				}
+
+				boolean bookLoanExpired = false;
 				LibAppBookWrapper libAppBookWrapper = libAppBookLoan.getLoanedBookWrapper();
 				LibAppBook libAppBook = libAppBookWrapper.getOwnerLibAppBook();
 
@@ -56,8 +66,6 @@ public class BookLoanExpiringTermScheduler {
 				LocalDateTime loanExpireOn = libAppBookLoan.getLoanExpireOn();
 				long daysDifference = ChronoUnit.DAYS.between(loanExpireOn, now);
 
-				System.out.println(daysDifference);
-
 				if (daysDifference == -1) {
 					alertsNeeded = true;
 					emailMessageBuilder.append("\r\nBook loan expiring tomorrow for: " + title + " by " + author + "\r\n");
@@ -66,20 +74,31 @@ public class BookLoanExpiringTermScheduler {
 					emailMessageBuilder.append("\r\nBook loan expiring today for: " + title + " by " + author + "\r\n");
 				} else if (daysDifference > 0) {
 					alertsNeeded = true;
+					bookLoanExpired = true;
 					emailMessageBuilder.append("\r\nBook loan expired for: " + title + " by " + author + ". Penalties are applied daily." + "\r\n");
 				} else {
 					//noop
 				}
 
+				if (bookLoanExpired) {
+					if (libAppBookLoan.getLoanStatus() != LibAppBookLoan.BookLoanStatus.EXPIRED) {
+						libAppBookLoan.setLoanStatus(LibAppBookLoan.BookLoanStatus.EXPIRED);
+					}
+
+					libAppBookLoan.setLoanFineAmount(BigDecimal.valueOf(2 * daysDifference));
+
+					libAppBookLoanRepository.save(libAppBookLoan);
+				}
+
 			}
 
-			if (alertsNeeded) {
-				emailSenderService.sendSimpleEmail(
-					libAppUser.getEmail(),
-					emailSubject,
-					emailMessageBuilder.toString()
-				);
-			}
+//			if (alertsNeeded) {
+//				emailSenderService.sendSimpleEmail(
+//					libAppUser.getEmail(),
+//					emailSubject,
+//					emailMessageBuilder.toString()
+//				);
+//			}
 
 		}
 

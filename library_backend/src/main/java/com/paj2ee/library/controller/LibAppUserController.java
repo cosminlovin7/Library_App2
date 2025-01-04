@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -129,4 +130,52 @@ public class LibAppUserController {
 		};
 	}
 
+	@Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
+	@GetMapping("/users/{id}")
+	public ResponseEntity<UserInfoDto> getUserById(@PathVariable("id") Long id) {
+
+		LibAppUser libAppUser = libAppUserRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("User not found"));
+
+
+		Set<LibAppUserAuthority> libAppUserAuthorities = libAppUser.getAuthorities();
+		List<String> authorities = new ArrayList<>();
+
+		for (LibAppUserAuthority libAppUserAuthority : libAppUserAuthorities) {
+			authorities.add(libAppUserAuthority.getAuthority());
+		}
+
+		LibAppFile libAppFile = libAppUser.getIdentityCardFile();
+
+		String base64IdentityPhotoFile = null;
+
+		FileInfoDto fileInfoDto = null;
+		if (null != libAppFile) {
+			base64IdentityPhotoFile = diskStorageServiceImpl.getFileAsBase64(libAppFile.getFilename());
+
+			FileInfoMetaDto fileInfoMetaDto = new FileInfoMetaDto(
+				libAppFile.getFilename(),
+				libAppFile.getType(),
+				libAppFile.getSize()
+			);
+
+			fileInfoDto = new FileInfoDto(
+				libAppFile.getId(),
+				fileInfoMetaDto,
+				base64IdentityPhotoFile
+			);
+		}
+
+		UserInfoDto userInfoDto = new UserInfoDto(
+			libAppUser.getId(),
+			libAppUser.getUsername(),
+			libAppUser.getEmail(),
+			libAppUser.getPhoneNumber(),
+			libAppUser.isEnabled(),
+			authorities,
+			fileInfoDto
+		);
+
+		return ResponseEntity.ok(userInfoDto);
+	}
 }

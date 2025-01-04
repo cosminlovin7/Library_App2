@@ -8,6 +8,7 @@ import com.paj2ee.library.model.LibAppBook;
 import com.paj2ee.library.model.LibAppBookCollection;
 import com.paj2ee.library.repository.LibAppBookCollectionRepository;
 import com.paj2ee.library.repository.LibAppBookRepository;
+import jakarta.persistence.criteria.Join;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +48,7 @@ public class LibAppAdminBookController {
 		@RequestParam(name = "title", required = false) String title,
 		@RequestParam(name = "author", required = false) String author,
 		@RequestParam(name = "editure", required = false) String editure,
-		@RequestParam(name = "collection", required = false) String collection,
+		@RequestParam(name = "collection", required = false) Long collectionId,
 		@RequestParam(name = "yearOfPublication", required = false) Integer yearOfPublication
 	) {
 
@@ -62,8 +63,8 @@ public class LibAppAdminBookController {
 		if (null != editure) {
 			allSpec = allSpec.and(compareWithEditureSpec(editure));
 		}
-		if (null != collection) {
-			allSpec = allSpec.and(compareWithCollectionSpec(collection));
+		if (null != collectionId) {
+			allSpec = allSpec.and(compareWithCollectionSpec(collectionId));
 		}
 		if (null != yearOfPublication) {
 			allSpec = allSpec.and(compareWithYearOfPublicationSpec(yearOfPublication));
@@ -111,9 +112,11 @@ public class LibAppAdminBookController {
 		};
 	}
 
-	private static Specification<LibAppBook> compareWithCollectionSpec(String collection) {
+	private static Specification<LibAppBook> compareWithCollectionSpec(Long collectionId) {
 		return (root, query, builder) -> {
-			return builder.like(root.get("collection"), "%" + collection + "%");
+			Join<LibAppBook, LibAppBookCollection> libAppBookCollectionJoin = root.join("collection");
+
+			return builder.equal(libAppBookCollectionJoin.get("id"), collectionId);
 		};
 	}
 
