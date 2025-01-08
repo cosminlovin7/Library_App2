@@ -8,12 +8,14 @@ import com.paj2ee.library.model.LibAppBookWrapper;
 import com.paj2ee.library.repository.LibAppBookRepository;
 import com.paj2ee.library.repository.LibAppBookWrapperRepository;
 import jakarta.persistence.criteria.Join;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +45,8 @@ public class LibAppBookWrapperController {
 		@RequestParam(name = "author", required = false) String author,
 		@RequestParam(name = "editure", required = false) String editure,
 		@RequestParam(name = "collection", required = false) Long collectionId,
-		@RequestParam(name = "yearOfPublication", required = false) Integer yearOfPublication
+		@RequestParam(name = "yearOfPublication", required = false) Integer yearOfPublication,
+		HttpServletResponse httpServletResponse
 	) {
 
 		Specification<LibAppBookWrapper> allSpec = rootSpec();
@@ -79,6 +82,7 @@ public class LibAppBookWrapperController {
 			outLs
 		);
 
+		httpServletResponse.setHeader(HttpHeaders.CACHE_CONTROL, "public, max-age=3600");
 		return ResponseEntity.ok(out);
 
 	}
