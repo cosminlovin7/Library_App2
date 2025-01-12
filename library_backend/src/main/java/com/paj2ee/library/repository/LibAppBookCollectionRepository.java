@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LibAppBookCollectionRepository extends JpaRepository<LibAppBookCollection, Long> {
+
+	LibAppBookCollection findByName(String name);
+
 }

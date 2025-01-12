@@ -3,17 +3,9 @@ package com.paj2ee.library.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -30,39 +22,13 @@ public class WebSecurityConfig {
                 configurer
                     .requestMatchers(
                         "/actuator/**"
-                    ).authenticated()
+                    ).hasRole("ACTUATOR")
                     .anyRequest().denyAll()
             )
             .httpBasic(Customizer.withDefaults())
-            .authenticationManager(authenticationManagerForActuator())
         ;
 
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService actuatorUserDetailsService() {
-        // Define the username and password for Basic Authentication
-        return username -> User
-            .withUsername("actuator_username")
-            .password(passwordEncoder().encode("actuator_password"))
-            .roles("USER")
-            .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManagerForActuator() throws Exception {
-        return new ProviderManager(new AuthenticationProvider[] {
-            new DaoAuthenticationProvider() {{
-                setUserDetailsService(actuatorUserDetailsService());
-                setPasswordEncoder(passwordEncoder());
-            }}
-        });
     }
 
     @Order(1)
@@ -84,7 +50,6 @@ public class WebSecurityConfig {
                         "/hello"
                     ).hasRole("USER")
                     .requestMatchers(
-                        "/users",
                         "/hello-admin",
 
                         "/admin/users/{id}/enable",
@@ -111,6 +76,8 @@ public class WebSecurityConfig {
                     ).hasRole("ADMIN")
                     .requestMatchers(
                         "/dashboard-header",
+
+                        "/users",
 
                         "/book-loans",
                         "/book-loans/{id}",

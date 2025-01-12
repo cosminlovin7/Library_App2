@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LibAppBookRepository extends JpaRepository<LibAppBook, Long>, JpaSpecificationExecutor<LibAppBook> {
+
+	LibAppBook findByTitleAndAuthorAndEditure(String title, String author, String editure);
+
 }
