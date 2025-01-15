@@ -92,13 +92,13 @@ public class BookLoanExpiringTermScheduler {
 
 			}
 
-//			if (alertsNeeded) {
-//				emailSenderService.sendSimpleEmail(
-//					libAppUser.getEmail(),
-//					emailSubject,
-//					emailMessageBuilder.toString()
-//				);
-//			}
+			if (alertsNeeded) {
+				emailSenderService.sendSimpleEmail(
+					libAppUser.getEmail(),
+					emailSubject,
+					emailMessageBuilder.toString()
+				);
+			}
 
 		}
 

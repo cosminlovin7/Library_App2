@@ -78,7 +78,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     title: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     author: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     editure: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
-    collection: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
+    collection: new FormControl('', [Validators.minLength(0), Validators.maxLength(30)]),
     yearOfPublication: new FormControl('', [Validators.pattern('\\d{4}')])
   })
 
@@ -108,7 +108,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     title: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     author: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     editure: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
-    collection: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
+    collection: new FormControl('', [Validators.minLength(0), Validators.maxLength(50)]),
     yearOfPublication: new FormControl('', [Validators.pattern('\\d{4}')])
   })
 
@@ -714,7 +714,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
           url = `http://localhost:9922/book-collections`;
           break;
         case 2:
-          url = `http://localhost:9922/admin/books?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+          url = `http://localhost:9922/admin/books?page=${me.books_page}&pageSize=${me.books_pageSize}`;
 
           __title = me.booksFiltersForm.get("title")?.getRawValue();
           __author = me.booksFiltersForm.get("author")?.getRawValue();
@@ -1278,7 +1278,7 @@ export class InventoryPageComponent implements OnInit, AfterViewInit {
     let url = null;
     let __title = null, __author = null, __editure = null, __collection = null, __yearOfPublication = null;
 
-    url = `http://localhost:9922/admin/books?page=${me.book_stock_page}&pageSize=${me.book_stock_pageSize}`;
+    url = `http://localhost:9922/admin/books?page=${me.books_page}&pageSize=${me.books_pageSize}`;
 
     __title = me.bookStockFiltersForm.get("title")?.getRawValue();
     __author = me.bookStockFiltersForm.get("author")?.getRawValue();

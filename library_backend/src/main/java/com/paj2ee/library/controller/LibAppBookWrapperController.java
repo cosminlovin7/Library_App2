@@ -82,7 +82,7 @@ public class LibAppBookWrapperController {
 			outLs
 		);
 
-		httpServletResponse.setHeader(HttpHeaders.CACHE_CONTROL, "public, max-age=3600");
+//		httpServletResponse.setHeader(HttpHeaders.CACHE_CONTROL, "public, max-age=3600");
 		return ResponseEntity.ok(out);
 
 	}

@@ -77,6 +77,8 @@ fieldset {
 
 .user-details-page-profile-data-authorities {
   display: flex;
+
+  flex-direction: column;
 }
 
 .user-details-page-profile-data-authority {
@@ -86,6 +88,8 @@ fieldset {
   color: white;
   background: #413B61;
   border-color: #413B61;
+
+  margin: 10px;
 
   padding: 10px;
 }

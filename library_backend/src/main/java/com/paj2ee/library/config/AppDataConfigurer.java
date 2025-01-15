@@ -141,6 +141,13 @@ public class AppDataConfigurer {
 		LibAppBookCollection bookCollection9 = new LibAppBookCollection();
 		bookCollection9.setName("Poetry Anthologies");
 
+//		for (int i = 0; i < 10000; i++) {
+//			LibAppBookCollection bookCollection = new LibAppBookCollection();
+//			bookCollection.setName("Book Collection[" + i + "]");
+//
+//			libAppBookCollectionRepository.save(bookCollection);
+//		}
+
 		if (null == libAppBookCollectionRepository.findByName(bookCollection1.getName())) {
 			libAppBookCollectionRepository.save(bookCollection1);
 		}

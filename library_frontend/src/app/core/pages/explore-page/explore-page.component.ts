@@ -60,7 +60,7 @@ export class ExplorePageComponent implements OnInit, AfterViewInit {
     title: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     author: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
     editure: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
-    collection: new FormControl('', [Validators.minLength(2), Validators.maxLength(30)]),
+    collection: new FormControl('', [Validators.minLength(0), Validators.maxLength(30)]),
     yearOfPublication: new FormControl('', [Validators.pattern('\\d{4}')])
   })
   book_stock_selectedBook: BookWrapperInfoDto | null = null;
